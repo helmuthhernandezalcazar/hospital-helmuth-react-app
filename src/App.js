@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import MedicalFloorCard from "./components/MedicalFloorCard";
 import MedicalFLoorList from "./components/MedicalFloorList";
+import NavBar from "./components/NavBar";
 
 function App() {
   const [patients, setPatients] = useState([]);
@@ -11,6 +12,7 @@ function App() {
   }, []);
   return (
     <>
+      <NavBar></NavBar>
       <MedicalFLoorList />
       <ul>
         {patients.map((patient, index) => {
