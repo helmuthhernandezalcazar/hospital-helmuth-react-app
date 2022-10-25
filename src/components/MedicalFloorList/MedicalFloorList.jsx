@@ -4,7 +4,6 @@ import MedicalFloorCard from "../MedicalFloorCard";
 
 const MedicalFLoorList = () => {
   const [medicalFloors, setMedicalFloors] = useState([]);
-  const [medicalSpecialtyName, setMedicalSpecialtyName] = useState({});
 
   useEffect(() => {
     fetch("http://localhost:8080/medicalFloors")
@@ -14,32 +13,17 @@ const MedicalFLoorList = () => {
 
   return (
     <Container>
-      {medicalFloors.map((medicalFloor, index) => {
-        return (
-          <Row>
-            {console.log("medicalSpecialty: " + medicalSpecialtyName)}
-            <MedicalFloorCard
-              key={index}
-              name={medicalFloor.name}
-              medicalSpecialty={medicalFloor._links.medicalSpecialty.href}
-            ></MedicalFloorCard>
-          </Row>
-        );
-      })}
-
-      <Row>
-        <Col>
-          <MedicalFloorCard
-            name="1A"
-            medicalSpecialty="Urología"
-          ></MedicalFloorCard>
-        </Col>
-        <Col>
-          <MedicalFloorCard
-            name="2A"
-            medicalSpecialty="Urgencias"
-          ></MedicalFloorCard>
-        </Col>
+      <Row className="row-cols-3">
+        {medicalFloors.map((medicalFloor, index) => {
+          return (
+            <Col key={index}>
+              <MedicalFloorCard
+                name={medicalFloor.name}
+                medicalSpecialty={medicalFloor._links.medicalSpecialty.href}
+              ></MedicalFloorCard>
+            </Col>
+          );
+        })}
       </Row>
     </Container>
   );
