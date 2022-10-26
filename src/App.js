@@ -7,6 +7,7 @@ import {
 import MainPage from "./components/MainPage";
 import MedicalFLoorList from "./components/MedicalFloorList";
 import NavBar from "./components/NavBar";
+import PatientsPage from "./components/PatientsPage";
 import PatientTable from "./components/PatientsPage/PatientTable";
 
 const router = createBrowserRouter([
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/pacientes",
-    element: <PatientTable />,
+    element: <PatientsPage />,
   },
 ]);
 
