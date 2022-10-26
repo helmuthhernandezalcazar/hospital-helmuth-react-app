@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 
 const PatientTable = () => {
   const [patients, setPatients] = useState([]);
@@ -19,7 +19,7 @@ const PatientTable = () => {
             <th>Apellidos</th>
             <th>DNI</th>
             <th>Teléfono</th>
-            <th>Fecha de hospitalizaión</th>
+            <th>Más info.</th>
           </tr>
         </thead>
         <tbody>
@@ -30,7 +30,9 @@ const PatientTable = () => {
                 <td>{patient.lastName}</td>
                 <td>{patient.dni}</td>
                 <td>{patient.phoneNumber}</td>
-                <td>{patient.hospitalizationDate}</td>
+                <td>
+                  <Button variant="outline-primary">Detalles</Button>
+                </td>
               </tr>
             );
           })}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 
 const MedicalFloorCard = (props) => {
   const [medicalSpecialtyName, setMedicalSpecialtyName] = useState(null);
