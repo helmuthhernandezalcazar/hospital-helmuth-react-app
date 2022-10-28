@@ -1,3 +1,3 @@
-import PatientTable from "./PatientTable";
+import PatientsTable from "./PatientsTable";
 
-export default PatientTable;
+export default PatientsTable;

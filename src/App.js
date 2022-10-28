@@ -7,6 +7,7 @@ import {
 import MainPage from "./components/MainPage";
 import MedicalFLoorList from "./components/MedicalFloorList";
 import NavBar from "./components/NavBar";
+import PatientDetailCard from "./components/PatientDetails";
 import PatientsPage from "./components/PatientsPage";
 import PatientTable from "./components/PatientsPage/PatientTable";
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/pacientes",
     element: <PatientsPage />,
+  },
+  {
+    path: "/paciente/:id",
+    element: <PatientDetailCard></PatientDetailCard>,
   },
 ]);
 
