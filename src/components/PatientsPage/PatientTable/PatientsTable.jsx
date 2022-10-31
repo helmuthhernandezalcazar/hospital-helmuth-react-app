@@ -33,12 +33,6 @@ const PatientTable = () => {
             .map((patient, index) => {
               const self = patient._links.self.href;
               const id = self.split("http://localhost:8080/patients/").pop();
-
-              console.log(
-                patient.firstName +
-                  " " +
-                  self.split("http://localhost:8080/patients/").pop()
-              );
               return (
                 <tr
                   style={
