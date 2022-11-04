@@ -1,8 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { propTypes } from "react-bootstrap/esm/Image";
 import { useForm } from "react-hook-form";
 
-const PatientForm = () => {
+const PatientForm = (props) => {
   const { register, handleSubmit } = useForm();
+  const [infoMsg, setInfoMsg] = useState("");
 
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -12,7 +14,12 @@ const PatientForm = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+    }).then((response) => {
+      if (!response.ok) setInfoMsg("error");
+      if (response.ok) setInfoMsg("Paciente registrado");
     });
+
+    props.refreshTable();
   };
 
   return (
@@ -104,6 +111,7 @@ const PatientForm = () => {
             value="Registrar"
             style={{ marginTop: 20 }}
           />
+          <p>{infoMsg}</p>
         </div>
       </div>
     </form>

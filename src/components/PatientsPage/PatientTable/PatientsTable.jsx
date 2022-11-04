@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
 
-const PatientTable = () => {
+const PatientTable = (props) => {
   const [patients, setPatients] = useState([]);
-  const [refreshToggle, setRefreshToggle] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:8080/patients?size=100")
       .then((response) => response.json())
       .then((data) => setPatients(data._embedded.patients));
-  }, [refreshToggle]);
-
-  const handleRefresh = () => {
-    setRefreshToggle(!refreshToggle);
-  };
+  }, [props.refreshToggle]);
 
   return (
     <div className="table-responsive ">
@@ -56,11 +51,7 @@ const PatientTable = () => {
             })}
         </tbody>
       </table>
-      <div>
-        <button className="btn btn-primary" onClick={handleRefresh}>
-          Actualizar
-        </button>
-      </div>
+      <div></div>
     </div>
   );
 };
