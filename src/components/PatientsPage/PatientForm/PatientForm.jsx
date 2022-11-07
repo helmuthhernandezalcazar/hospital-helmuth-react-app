@@ -8,12 +8,13 @@ const PatientForm = (props) => {
 
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
+    const patient = { ...data, hospitalizationDate: new Date() };
     fetch("http://localhost:8080/patients", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(patient),
     }).then((response) => {
       if (!response.ok) setInfoMsg("error");
       if (response.ok) setInfoMsg("Paciente registrado");

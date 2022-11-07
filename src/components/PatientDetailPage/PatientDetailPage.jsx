@@ -9,6 +9,7 @@ import PatientNotes from "./PatientNotes";
 const PatientDetailPage = () => {
   const { id } = useParams([]);
   const [patient, setPatient] = useState({});
+  const [notes, setNotes] = useState([]);
   const [notesRef, setNotesRef] = useState();
   const [measurementsRef, setMeasurementsRef] = useState();
   useEffect(() => {
@@ -21,10 +22,18 @@ const PatientDetailPage = () => {
       });
   }, [id]);
 
+  useEffect(() => {
+    fetch(notesRef)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => setNotes(data._embedded.notes));
+  }, [notesRef]);
+
   return (
     <Container>
       <PatientDetailCard patient={patient} />
-      <PatientNotes notesRef={notesRef} />
+      <PatientNotes notes={notes} patientId={id} />
       <PatientMeasurements measurementsRef={measurementsRef} />
     </Container>
   );
