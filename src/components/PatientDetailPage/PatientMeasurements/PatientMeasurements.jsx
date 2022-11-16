@@ -4,18 +4,17 @@ import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
 import { useForm } from "react-hook-form";
+import getMeasurements from "../../../services/patient/getMeasurements";
 
 const PatientMeasurements = (props) => {
+  const patientId = props.patientId;
   const [measurements, setMeasurements] = useState([]);
-  const [measurementTypeRef, setMeasurementTypeRef] = useState();
 
   useEffect(() => {
-    fetch(props.measurementsRef)
-      .then((response) => response.json())
-      .then((data) => {
-        setMeasurements(data._embedded.measurements);
-      });
-  }, [props.measurementsRef]);
+    getMeasurements(patientId).then((measurements) =>
+      setMeasurements(measurements)
+    );
+  }, []);
 
   return (
     <Container>

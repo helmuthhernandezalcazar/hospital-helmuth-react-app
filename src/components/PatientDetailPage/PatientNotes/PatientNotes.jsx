@@ -1,10 +1,16 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Button, Col, Container, Row, Table } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
+import getNotes from "../../../services/patient/getNotes";
 
 const PatientNotes = (props) => {
-  const notes = props.notes;
+  const patientId = props.patientId;
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    getNotes(patientId).then((notes) => setNotes(notes));
+  }, []);
 
   return (
     <Container>

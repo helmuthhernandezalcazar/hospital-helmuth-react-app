@@ -5,7 +5,15 @@ import { useParams } from "react-router-dom";
 import PatientsPage from "../../PatientsPage";
 
 const PatientDetailCard = (props) => {
-  const patient = props.patient;
+  const patientId = props.patientId;
+  const [patient, setPatient] = useState({});
+  useEffect(() => {
+    fetch(`http://localhost:8080/patients/${patientId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setPatient(data);
+      });
+  }, []);
 
   return (
     <Card style={{ width: "26em", margin: 20 }}>
