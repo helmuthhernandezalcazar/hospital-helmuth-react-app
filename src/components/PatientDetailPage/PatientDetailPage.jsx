@@ -34,7 +34,7 @@ const PatientDetailPage = () => {
     <Container>
       <PatientDetailCard patient={patient} />
       <PatientNotes notes={notes} patientId={id} />
-      <PatientMeasurements measurementsRef={measurementsRef} />
+      <PatientMeasurements measurementsRef={measurementsRef} patientId={id} />
     </Container>
   );
 };

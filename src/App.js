@@ -9,6 +9,7 @@ import MedicalFLoorList from "./components/MedicalFloorList";
 import NavBar from "./components/NavBar";
 import PatientDetailPage from "./components/PatientDetailPage";
 import PatientsPage from "./components/PatientsPage";
+import TestComponent from "./components/TestComponent";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/test",
-    element: <PatientDetailPage />,
+    element: <TestComponent />,
   },
 ]);
 
