@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Card, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, Card, ListGroup, ListGroupItem } from "react-bootstrap";
 import { propTypes } from "react-bootstrap/esm/Image";
 import { useParams } from "react-router-dom";
+import discharge from "../../../services/patient/discharge";
 import getRoom from "../../../services/patient/getRoom";
 import getTriage from "../../../services/patient/getTriage";
 import PatientsPage from "../../PatientsPage";
@@ -24,52 +25,49 @@ const PatientDetailCard = (props) => {
     getTriage(patientId).then((triage) => setPatientTriage(triage));
   }, [patient]);
 
+  function dischargePatient() {
+    discharge(patientId);
+    window.location.reload(false);
+  }
+
   return (
     <Card style={{ width: "26em", margin: 20 }}>
       <Card.Header as="h2">
         {patient.firstName} {patient.lastName}
       </Card.Header>
+      <Card.Body>
+        <ListGroup>
+          <ListGroupItem>Habitación: {patientRoom.name}</ListGroupItem>
+          <ListGroupItem>
+            Diagnóstico: {patient.medicalDiagnosis}{" "}
+          </ListGroupItem>
+          <ListGroupItem>
+            Hospitalización:{" "}
+            {new Date(patient.hospitalizationDate).toUTCString()}
+          </ListGroupItem>
+          {patient.dischargeDate !== null ? (
+            <ListGroupItem>
+              Alta: {new Date(patient.dischargeDate).toUTCString()}
+            </ListGroupItem>
+          ) : (
+            <></>
+          )}
 
-      <ListGroup>
-        <ListGroupItem>Habitación: {patientRoom.name}</ListGroupItem>
-        <ListGroupItem>Diagnóstico: {patient.medicalDiagnosis} </ListGroupItem>
-        <ListGroupItem>
-          Hospitalización: {new Date(patient.hospitalizationDate).toUTCString()}
-        </ListGroupItem>
-        <ListGroupItem>Síntomas: {patient.symptoms}</ListGroupItem>
-        <ListGroupItem>
-          Triaje: {patientTriage.name} ({patientTriage.level})
-        </ListGroupItem>
-      </ListGroup>
-      <ListGroup>
-        <ListGroupItem>Dni: {patient.dni}</ListGroupItem>
-        <ListGroupItem>Núm. teléfono: {patient.phoneNumber}</ListGroupItem>
-      </ListGroup>
+          <ListGroupItem>Síntomas: {patient.symptoms}</ListGroupItem>
+          <ListGroupItem>
+            Triaje: {patientTriage.name} ({patientTriage.level})
+          </ListGroupItem>
+          <ListGroupItem>Dni: {patient.dni}</ListGroupItem>
+          <ListGroupItem>Núm. teléfono: {patient.phoneNumber}</ListGroupItem>
+        </ListGroup>
+        {patient.dischargeDate === null ? (
+          <Button onClick={(event) => dischargePatient()}>Dar de alta</Button>
+        ) : (
+          <></>
+        )}
+      </Card.Body>
     </Card>
   );
 };
 
-const RoomName = (props) => {
-  const [room, setRoom] = useState({});
-
-  useEffect(() => {
-    fetch(props.room)
-      .then((response) => response.json())
-      .then((data) => setRoom(data));
-  }, [props.room]);
-
-  return <span>{room.name}</span>;
-};
-
-const TriageName = (props) => {
-  const [triage, setTriage] = useState({});
-
-  useEffect(() => {
-    fetch(props.triage)
-      .then((response) => response.json())
-      .then((data) => setTriage(data));
-  }, [props.triage]);
-
-  return <span>{triage.name}</span>;
-};
 export default PatientDetailCard;
