@@ -3,5 +3,9 @@ export default function getRoom(patientId) {
     .then((response) => response.json())
     .then((room) => {
       return room;
+    })
+    .catch((error) => {
+      console.log(error);
+      return error;
     });
 }

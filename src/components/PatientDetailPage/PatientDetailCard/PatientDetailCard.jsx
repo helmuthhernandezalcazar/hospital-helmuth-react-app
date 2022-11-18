@@ -12,6 +12,7 @@ const PatientDetailCard = (props) => {
   const [patient, setPatient] = useState({});
   const [patientRoom, setPatientRoom] = useState({});
   const [patientTriage, setPatientTriage] = useState({});
+
   useEffect(() => {
     fetch(`http://localhost:8080/patients/${patientId}`)
       .then((response) => response.json())
@@ -37,7 +38,9 @@ const PatientDetailCard = (props) => {
       </Card.Header>
       <Card.Body>
         <ListGroup>
-          <ListGroupItem>Habitación: {patientRoom.name}</ListGroupItem>
+          <ListGroupItem>
+            Habitación: {patientRoom !== undefined ? patientRoom.name : ""}
+          </ListGroupItem>
           <ListGroupItem>
             Diagnóstico: {patient.medicalDiagnosis}{" "}
           </ListGroupItem>
