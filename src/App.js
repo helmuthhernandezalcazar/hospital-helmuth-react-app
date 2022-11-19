@@ -9,12 +9,17 @@ import MedicalFLoorList from "./components/MedicalFloorList";
 import NavBar from "./components/NavBar";
 import PatientDetailPage from "./components/PatientDetailPage";
 import PatientsPage from "./components/PatientsPage";
+import RoomList from "./components/RoomList/RoomList";
 import TestComponent from "./components/TestComponent";
 
 const router = createBrowserRouter([
   {
     path: "/plantas",
     element: <MedicalFLoorList />,
+  },
+  {
+    path: "/plantas/:id/habitaciones",
+    element: <RoomList />,
   },
   {
     path: "/",

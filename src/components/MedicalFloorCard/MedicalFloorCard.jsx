@@ -1,24 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
+import getMedicalSpecialty from "../../services/medicalFloor/getMedicalSpecialty";
 
 const MedicalFloorCard = (props) => {
-  const [medicalSpecialtyName, setMedicalSpecialtyName] = useState(null);
+  const medicalFloorId = props.medicalFloorId;
+  const [medicalSpecialty, setMedicalSpecialty] = useState({});
+  const [medicalFloor, setMedicalFloor] = useState({});
 
   useEffect(() => {
-    fetch(props.medicalSpecialty)
-      .then((response) => response.json())
-      .then((data) => setMedicalSpecialtyName(data.name));
+    getMedicalSpecialty(medicalFloorId).then((medicalSpecialty) =>
+      setMedicalSpecialty(medicalSpecialty)
+    );
+  }, [medicalFloor]);
+
+  useEffect(() => {
+    setMedicalFloor(props.medicalFloor);
   }, []);
 
   return (
     <Card style={{ marginTop: "16px" }}>
-      <Card.Header as="h3">Planta médica</Card.Header>
+      <Card.Header as="h3">{medicalSpecialty.name}</Card.Header>
       <Card.Body>
-        <Card.Title>
-          {props.name} - {medicalSpecialtyName}
-        </Card.Title>
+        <Card.Title>Planta: {medicalFloor.name}</Card.Title>
       </Card.Body>
-      <Button variant="primary">Ver</Button>
+      <Button
+        variant="primary"
+        href={`/plantas/${medicalFloorId}/habitaciones`}
+      >
+        Ver habitaciones
+      </Button>
     </Card>
   );
 };

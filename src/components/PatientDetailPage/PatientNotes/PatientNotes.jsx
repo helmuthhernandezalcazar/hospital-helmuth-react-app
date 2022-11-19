@@ -63,7 +63,7 @@ const AddNoteSection = (props) => {
       body: JSON.stringify(body),
     });
 
-    /*window.location.reload(false);*/
+    window.location.reload(false);
   }
   return (
     <Container>

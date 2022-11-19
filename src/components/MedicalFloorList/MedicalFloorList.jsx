@@ -15,11 +15,13 @@ const MedicalFLoorList = () => {
     <Container>
       <Row className="row-cols-3">
         {medicalFloors.map((medicalFloor, index) => {
+          const self = medicalFloor._links.self.href;
+          const id = self.split("http://localhost:8080/medicalFloors/").pop();
           return (
             <Col key={index}>
               <MedicalFloorCard
-                name={medicalFloor.name}
-                medicalSpecialty={medicalFloor._links.medicalSpecialty.href}
+                medicalFloor={medicalFloor}
+                medicalFloorId={id}
               ></MedicalFloorCard>
             </Col>
           );
