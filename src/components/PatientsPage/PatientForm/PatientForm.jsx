@@ -13,7 +13,8 @@ const PatientForm = (props) => {
     useState(false);
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
-    const patient = { ...data, hospitalizationDate: new Date() };
+    let patient = { ...data, hospitalizationDate: new Date() };
+    if (patient.room === "default") patient = { ...patient, room: null };
     fetch("http://localhost:8080/patients", {
       method: "post",
       headers: {
