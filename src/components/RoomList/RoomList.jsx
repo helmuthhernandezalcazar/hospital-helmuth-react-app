@@ -3,17 +3,29 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import getMedicalSpecialty from "../../services/medicalFloor/getMedicalSpecialty";
 import getRooms from "../../services/medicalFloor/getRooms";
 import RoomCard from "../RoomCard";
 
 const RoomList = () => {
   const { id } = useParams([]);
   const [rooms, setRooms] = useState([]);
+  const [medicalFloor, setMedicalFloor] = useState({});
+  const [medicalSpecialty, setMedicalSpecialty] = useState({});
   useEffect(() => {
+    fetch("http://localhost:8080/medicalFloors/" + id)
+      .then((response) => response.json())
+      .then((medicalFloor) => setMedicalFloor(medicalFloor));
+    getMedicalSpecialty(id).then((medicalSpecialty) =>
+      setMedicalSpecialty(medicalSpecialty)
+    );
     getRooms(id).then((rooms) => setRooms(rooms));
   }, [id]);
   return (
     <Container>
+      <h1>
+        {medicalFloor.name} {medicalSpecialty.name}
+      </h1>
       <Row className="row-cols-4">
         {rooms.map((room, index) => {
           const self = room._links.self.href;
