@@ -12,6 +12,7 @@ const PatientDetailCard = (props) => {
   const [patient, setPatient] = useState({});
   const [patientRoom, setPatientRoom] = useState({});
   const [patientTriage, setPatientTriage] = useState({});
+  const [refreshToggle, setRefreshToggle] = useState(false);
 
   useEffect(() => {
     fetch(`http://localhost:8080/patients/${patientId}`)
@@ -19,16 +20,18 @@ const PatientDetailCard = (props) => {
       .then((data) => {
         setPatient(data);
       });
-  }, []);
+  }, [refreshToggle]);
 
   useEffect(() => {
     getRoom(patientId).then((room) => setPatientRoom(room));
+
     getTriage(patientId).then((triage) => setPatientTriage(triage));
-  }, [patient]);
+  }, []);
 
   function dischargePatient() {
     discharge(patientId);
-    window.location.reload(false);
+    setRefreshToggle(!refreshToggle);
+    //window.location.reload(false);
   }
 
   return (
@@ -39,7 +42,7 @@ const PatientDetailCard = (props) => {
       <Card.Body>
         <ListGroup>
           <ListGroupItem>
-            Habitación: {patientRoom !== undefined ? patientRoom.name : ""}
+            Habitación: {patient.dischargeDate === null ? patientRoom.name : ""}
           </ListGroupItem>
           <ListGroupItem>
             Diagnóstico: {patient.medicalDiagnosis}{" "}

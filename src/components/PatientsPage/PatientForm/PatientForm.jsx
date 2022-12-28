@@ -11,6 +11,7 @@ const PatientForm = (props) => {
   const [emptyRooms, setEmptyRooms] = useState([]);
   const [waitingRoomSwitchCheked, setWaitingRoomSwitchChecked] =
     useState(false);
+
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
     let patient = { ...data, hospitalizationDate: new Date() };
@@ -151,9 +152,9 @@ const PatientForm = (props) => {
           />
         </label>
       </div>
-
+      <div className="row">{getTriageSelect()}</div>
       <div className="row">
-        {waitingRoomSwitchCheked ? getTriageSelect() : getRoomSelect()}
+        {getRoomSelect()}
 
         <div className="row">
           <div className="col">

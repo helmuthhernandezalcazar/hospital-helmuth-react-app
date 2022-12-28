@@ -5,7 +5,6 @@ export default function getRoom(patientId) {
       return room;
     })
     .catch((error) => {
-      console.log(error);
-      return error;
+      return { name: "Sala de espera" };
     });
 }

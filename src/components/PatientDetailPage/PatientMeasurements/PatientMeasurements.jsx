@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Alert, Col, Container, Row } from "react-bootstrap";
 import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
 import { useForm } from "react-hook-form";
 import getMeasurements from "../../../services/patient/getMeasurements";
@@ -9,13 +9,17 @@ import getMeasurements from "../../../services/patient/getMeasurements";
 const PatientMeasurements = (props) => {
   const patientId = props.patientId;
   const [measurements, setMeasurements] = useState([]);
+  const [refreshToggle, setRefreshToggle] = useState(false);
 
   useEffect(() => {
     getMeasurements(patientId).then((measurements) =>
       setMeasurements(measurements)
     );
-  }, []);
+  }, [refreshToggle]);
 
+  const refreshTable = () => {
+    setRefreshToggle(!refreshToggle);
+  };
   return (
     <Container>
       <h2>Mediciones</h2>
@@ -28,7 +32,10 @@ const PatientMeasurements = (props) => {
           ></MeasurementRow>
         );
       })}
-      <AddMeasurementForm patientId={props.patientId} />
+      <AddMeasurementForm
+        patientId={props.patientId}
+        refreshTable={refreshTable}
+      />
     </Container>
   );
 };
@@ -64,6 +71,7 @@ const AddMeasurementForm = (props) => {
   const patientId = props.patientId;
   const [measurementTypes, setMeasurementTypes] = useState([]);
   const [measurementTypeSelected, setMeasurementTypeSelected] = useState({});
+  const [response, setResponse] = useState({});
   const { register, handleSubmit } = useForm();
 
   useEffect(() => {
@@ -88,9 +96,13 @@ const AddMeasurementForm = (props) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
+    }).then((response) => {
+      setResponse(response);
+      props.refreshTable();
+      console.log(response);
     });
 
-    window.location.reload(false);
+    //window.location.reload(false);
   }
 
   function getMeasurementTypeOptions() {
@@ -146,6 +158,9 @@ const AddMeasurementForm = (props) => {
             style={{ marginTop: 20 }}
           />
         </Col>
+      </Row>
+      <Row>
+        {response.status == 400 ? <Alert variant="danger">Error</Alert> : <></>}
       </Row>
     </form>
   );

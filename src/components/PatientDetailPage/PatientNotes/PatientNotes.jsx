@@ -7,11 +7,14 @@ import getNotes from "../../../services/patient/getNotes";
 const PatientNotes = (props) => {
   const patientId = props.patientId;
   const [notes, setNotes] = useState([]);
-
+  const [refreshToggle, setRefreshToggle] = useState(false);
   useEffect(() => {
     getNotes(patientId).then((notes) => setNotes(notes));
-  }, []);
+  }, [refreshToggle]);
 
+  const refreshTable = () => {
+    setRefreshToggle(!refreshToggle);
+  };
   return (
     <Container>
       <h2>Notas del paciente</h2>
@@ -37,13 +40,14 @@ const PatientNotes = (props) => {
           })}
         </tbody>
       </Table>
-      <AddNoteSection patientId={props.patientId} />
+      <AddNoteSection patientId={props.patientId} refreshTable={refreshTable} />
     </Container>
   );
 };
 
 const AddNoteSection = (props) => {
   const patientId = props.patientId;
+  const [response, setResponse] = useState({});
   const { register, handleSubmit } = useForm();
 
   function onSubmit(data) {
@@ -61,9 +65,13 @@ const AddNoteSection = (props) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
+    }).then((response) => {
+      setResponse(response);
+      props.refreshTable();
+      console.log(response);
     });
 
-    window.location.reload(false);
+    //window.location.reload(false);
   }
   return (
     <Container>

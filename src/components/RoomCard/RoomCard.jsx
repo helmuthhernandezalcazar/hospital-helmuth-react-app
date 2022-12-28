@@ -20,7 +20,6 @@ const RoomCard = (props) => {
       const roomPatientId = links.self.href
         .split("http://localhost:8080/patients/")
         .pop();
-      console.log(roomPatientId);
       setRoomPatientId(roomPatientId);
     });
   }, [id]);
