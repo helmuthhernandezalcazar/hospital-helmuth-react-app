@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import discharge from "../../../services/patient/discharge";
 import getRoom from "../../../services/patient/getRoom";
 import getTriage from "../../../services/patient/getTriage";
+import { patientService } from "../../../services/patient/patientService";
 import PatientsPage from "../../PatientsPage";
 
 const PatientDetailCard = (props) => {
@@ -29,8 +30,14 @@ const PatientDetailCard = (props) => {
   }, []);
 
   function dischargePatient() {
-    discharge(patientId);
-    setRefreshToggle(!refreshToggle);
+    patientService
+      .discharge(patientId)
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        setRefreshToggle(!refreshToggle);
+      });
+
     //window.location.reload(false);
   }
 
@@ -44,9 +51,7 @@ const PatientDetailCard = (props) => {
           <ListGroupItem>
             Habitación: {patient.dischargeDate === null ? patientRoom.name : ""}
           </ListGroupItem>
-          <ListGroupItem>
-            Diagnóstico: {patient.medicalDiagnosis}{" "}
-          </ListGroupItem>
+          <ListGroupItem>Diagnóstico: {patient.medicalDiagnosis}</ListGroupItem>
           <ListGroupItem>
             Hospitalización:{" "}
             {new Date(patient.hospitalizationDate).toUTCString()}

@@ -9,8 +9,6 @@ const PatientForm = (props) => {
   const { register, handleSubmit } = useForm();
   const [infoMsg, setInfoMsg] = useState("");
   const [emptyRooms, setEmptyRooms] = useState([]);
-  const [waitingRoomSwitchCheked, setWaitingRoomSwitchChecked] =
-    useState(false);
 
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -25,9 +23,8 @@ const PatientForm = (props) => {
     }).then((response) => {
       if (!response.ok) setInfoMsg("error");
       if (response.ok) setInfoMsg("Paciente registrado");
+      props.refreshTable();
     });
-
-    props.refreshTable();
   };
 
   useEffect(() => {
@@ -38,7 +35,7 @@ const PatientForm = (props) => {
     if (emptyRooms.length === 0)
       return (
         <option disabled style={{ color: "red" }}>
-          No hay habitaciones vacías
+          No hay habitaciones vacías - Se pondrá al paciente en Sala de espera.
         </option>
       );
 
@@ -76,12 +73,28 @@ const PatientForm = (props) => {
     return (
       <label>
         Triaje
-        <select className="form-control" name="triage" {...register("triage")}>
-          <option value="/triages/1">Nivel 1</option>
-          <option value="/triages/2">Nivel 2</option>
-          <option value="/triages/3">Nivel 3</option>
-          <option value="/triages/4">Nivel 4</option>
-          <option value="/triages/5">Nivel 5</option>
+        <select
+          className="form-control"
+          name="triage"
+          defaultValue="/triages/5"
+          {...register("triage")}
+          style={{ fontWeight: "bold" }}
+        >
+          <option value="/triages/1" style={{ backgroundColor: "#ff8080" }}>
+            Nivel 1 - Atención inmediata
+          </option>
+          <option value="/triages/2" style={{ backgroundColor: "#ffb380" }}>
+            Nivel 2 - Muy urgente
+          </option>
+          <option value="/triages/3" style={{ backgroundColor: "#ffe680" }}>
+            Nivel 3 - Urgente
+          </option>
+          <option value="/triages/4" style={{ backgroundColor: "#fff0b3" }}>
+            Nivel 4 - Urgencia menor
+          </option>
+          <option value="/triages/5" style={{ backgroundColor: "#fffae6" }}>
+            Nivel 5 - No urgente
+          </option>
         </select>
       </label>
     );
@@ -153,23 +166,7 @@ const PatientForm = (props) => {
         </label>
       </div>
       <div className="row">{getTriageSelect()}</div>
-      <div className="row">
-        {getRoomSelect()}
-
-        <div className="row">
-          <div className="col">
-            <Form.Check
-              type="switch"
-              label="sala de espera"
-              id="waitingRoomSwitch"
-              onChange={(e) => {
-                console.log(e);
-                setWaitingRoomSwitchChecked(e.target.checked);
-              }}
-            ></Form.Check>
-          </div>
-        </div>
-      </div>
+      <div className="row">{getRoomSelect()}</div>
 
       <div className="row">
         <div className="col">

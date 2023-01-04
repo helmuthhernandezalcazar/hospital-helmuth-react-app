@@ -1,4 +1,4 @@
-export default function discharge(patientId) {
+function discharge(patientId) {
   return fetch(`http://localhost:8080/patients/${patientId}`, {
     method: "PATCH",
     body: JSON.stringify({
@@ -10,3 +10,9 @@ export default function discharge(patientId) {
     },
   });
 }
+
+function getMeasurements(patientId) {
+  return fetch(`http://localhost:8080/patients/${patientId}/measurements`);
+}
+
+export const patientService = { discharge, getMeasurements };
