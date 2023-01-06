@@ -54,11 +54,11 @@ const PatientDetailCard = (props) => {
           <ListGroupItem>Diagnóstico: {patient.medicalDiagnosis}</ListGroupItem>
           <ListGroupItem>
             Hospitalización:{" "}
-            {new Date(patient.hospitalizationDate).toUTCString()}
+            {new Date(patient.hospitalizationDate).toLocaleString("es-ES")}
           </ListGroupItem>
           {patient.dischargeDate !== null ? (
             <ListGroupItem>
-              Alta: {new Date(patient.dischargeDate).toUTCString()}
+              Alta: {new Date(patient.dischargeDate).toLocaleString("es-ES")}
             </ListGroupItem>
           ) : (
             <></>

@@ -9,11 +9,14 @@ const PatientForm = (props) => {
   const { register, handleSubmit } = useForm();
   const [infoMsg, setInfoMsg] = useState("");
   const [emptyRooms, setEmptyRooms] = useState([]);
+  const [waitingRoomSwitchCheked, setWaitingRoomSwitchChecked] =
+    useState(false);
 
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
     let patient = { ...data, hospitalizationDate: new Date() };
-    if (patient.room === "default") patient = { ...patient, room: null };
+    if (patient.room === "default" || waitingRoomSwitchCheked)
+      patient = { ...patient, room: null };
     fetch("http://localhost:8080/patients", {
       method: "post",
       headers: {
@@ -55,12 +58,13 @@ const PatientForm = (props) => {
       <label>
         Habitación
         <select
+          id="roomSelector"
           className="form-control"
           defaultValue="default"
           name="room"
           {...register("room")}
         >
-          <option value="default" disabled>
+          <option id="defaultRoomSelector" value="default" disabled>
             Elegir Habitación
           </option>
           {getEmptyRoomsOptions()}
@@ -167,7 +171,23 @@ const PatientForm = (props) => {
       </div>
       <div className="row">{getTriageSelect()}</div>
       <div className="row">{getRoomSelect()}</div>
-
+      <div className="row">
+        <div className="col">
+          <Form.Check
+            type="switch"
+            label="sala de espera"
+            id="waitingRoomSwitch"
+            onChange={(e) => {
+              console.log(e);
+              setWaitingRoomSwitchChecked(e.target.checked);
+              if (!waitingRoomSwitchCheked) {
+                document.getElementById("defaultRoomSelector").selected = true;
+                document.getElementById("roomSelector").disabled = true;
+              } else document.getElementById("roomSelector").disabled = false;
+            }}
+          ></Form.Check>
+        </div>
+      </div>
       <div className="row">
         <div className="col">
           <input
@@ -176,6 +196,7 @@ const PatientForm = (props) => {
             value="Registrar"
             style={{ marginTop: 20 }}
           />
+
           <p>{infoMsg}</p>
         </div>
       </div>

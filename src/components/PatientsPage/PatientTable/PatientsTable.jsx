@@ -3,42 +3,70 @@ import {
   Button,
   ButtonGroup,
   Container,
+  Pagination,
   Table,
   ToggleButton,
   ToggleButtonGroup,
 } from "react-bootstrap";
+import { set } from "react-hook-form";
+import { patientService } from "../../../services/patient/patientService";
 
 const PatientTable = (props) => {
   const [patients, setPatients] = useState([]);
-  const [filter, setFilter] = useState("all");
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
+  const [filter, setFilter] = useState("hospitalized");
+  const [url, setUrl] = useState(
+    "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection"
+  );
+  const [links, setLinks] = useState({});
+  const [nextPageDisabled, setNextPageDisabled] = useState(false);
+  const [prevPageDisabled, setPrevPageDisabled] = useState(true);
   useEffect(() => {
-    fetch("http://localhost:8080/patients?projection=patientProjection")
+    console.log("useEffect");
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
+        const { size, totalPages, number } = data.page;
         setPatients(data._embedded.patients);
-        console.log(JSON.stringify(data));
-      });
-  }, [props.refreshToggle]);
+        setPage(number);
+        setPageSize(size);
+        setTotalPages(totalPages);
+        setLinks(data._links);
+        console.log(JSON.stringify(data._embedded.patients));
+        console.log(
+          "pages: " + page,
+          " totalPages: " + totalPages,
+          " pageSize: " + pageSize,
+          " links: " + JSON.stringify(links),
+          " url: " + url
+        );
 
-  function hospitalizedFilter(patient) {
-    return patient.dischargeDate === null;
-  }
-  const filters = {
-    hospitalized: hospitalizedFilter,
-  };
+        data._links.next !== undefined
+          ? setNextPageDisabled(false)
+          : setNextPageDisabled(true);
+        data._links.prev !== undefined
+          ? setPrevPageDisabled(false)
+          : setPrevPageDisabled(true);
+      });
+  }, [props.refreshToggle, url]);
 
   function filterPatient(patient) {
     switch (filter) {
       case "all":
-        return true == true;
+        return true;
       case "hospitalized":
         return (
-          patient.dischargeDate === null && patient.roomName != "Sala de espera"
+          patient.dischargeDate === null &&
+          patient.roomName !== "Sala de espera"
         );
       case "discharged":
         return patient.dischargeDate !== null;
       case "waiting room":
         return patient.roomName === "Sala de espera";
+      default:
+        return true;
     }
   }
   return (
@@ -52,7 +80,11 @@ const PatientTable = (props) => {
           id="toggleHospitalized"
           value={"hospitalized"}
           variant="secondary"
-          onClick={() => setFilter("hospitalized")}
+          onClick={() =>
+            setUrl(
+              "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection"
+            )
+          }
         >
           Hospitalizados
         </ToggleButton>
@@ -60,7 +92,11 @@ const PatientTable = (props) => {
           id="toggleDischarged"
           value={"discharged"}
           variant="secondary"
-          onClick={() => setFilter("discharged")}
+          onClick={() =>
+            setUrl(
+              "http://localhost:8080/patients/search/findByDischargeDateNotNull?projection=patientProjection"
+            )
+          }
         >
           Dados de alta
         </ToggleButton>
@@ -68,7 +104,11 @@ const PatientTable = (props) => {
           id="toggleWaitingRoom"
           value={"waiting room"}
           variant="secondary"
-          onClick={() => setFilter("waiting room")}
+          onClick={() =>
+            setUrl(
+              "http://localhost:8080/patients/search/findByRoomNullAndDischargeDateNull?projection=patientProjection"
+            )
+          }
         >
           Sala de espera
         </ToggleButton>
@@ -76,7 +116,11 @@ const PatientTable = (props) => {
           id="toggleAll"
           value={"all"}
           variant="secondary"
-          onClick={() => setFilter("all")}
+          onClick={() =>
+            setUrl(
+              "http://localhost:8080/patients?projection=patientProjection"
+            )
+          }
         >
           Todos
         </ToggleButton>
@@ -94,29 +138,40 @@ const PatientTable = (props) => {
           </tr>
         </thead>
         <tbody>
-          {patients
-            .filter((patient) => filterPatient(patient))
-            .map((patient, index) => {
-              const self = patient._links.self.href;
-              const id = self.split("http://localhost:8080/patients/").pop();
-              return (
-                <tr key={index}>
-                  <td>{patient.firstName}</td>
-                  <td>{patient.lastName}</td>
-                  <td>{patient.dni}</td>
-                  <td>{patient.roomName}</td>
-                  <td>{patient.triageLevel}</td>
-                  <td>
-                    <Button variant="outline-primary" href={`/paciente/${id}`}>
-                      Detalles
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })}
+          {patients.map((patient, index) => {
+            const self = patient._links.self.href;
+            const id = self.split("http://localhost:8080/patients/").pop();
+            return (
+              <tr key={index}>
+                <td>{patient.firstName}</td>
+                <td>{patient.lastName}</td>
+                <td>{patient.dni}</td>
+                <td>{patient.roomName}</td>
+                <td>{patient.triageLevel}</td>
+                <td>
+                  <Button variant="outline-primary" href={`/paciente/${id}`}>
+                    Detalles
+                  </Button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
-      <div></div>
+      <Pagination>
+        <Pagination.Prev
+          onClick={() => {
+            setUrl(links.prev.href);
+          }}
+          disabled={prevPageDisabled}
+        ></Pagination.Prev>
+        <Pagination.Next
+          onClick={() => {
+            setUrl(links.next.href);
+          }}
+          disabled={nextPageDisabled}
+        ></Pagination.Next>
+      </Pagination>
     </div>
   );
 };

@@ -1,3 +1,8 @@
+function getAll(params) {
+  return fetch("http://localhost:8080/patients?projection=patientProjection", {
+    params,
+  });
+}
 function discharge(patientId) {
   return fetch(`http://localhost:8080/patients/${patientId}`, {
     method: "PATCH",
@@ -15,4 +20,4 @@ function getMeasurements(patientId) {
   return fetch(`http://localhost:8080/patients/${patientId}/measurements`);
 }
 
-export const patientService = { discharge, getMeasurements };
+export const patientService = { getAll, discharge, getMeasurements };
