@@ -24,7 +24,6 @@ const PatientTable = (props) => {
   const [nextPageDisabled, setNextPageDisabled] = useState(false);
   const [prevPageDisabled, setPrevPageDisabled] = useState(true);
   useEffect(() => {
-    console.log("useEffect");
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -75,6 +74,7 @@ const PatientTable = (props) => {
         type="radio"
         name="filter-buttons"
         defaultValue={"hospitalized"}
+        style={{ paddingBottom: "12px" }}
       >
         <ToggleButton
           id="toggleHospitalized"
@@ -162,12 +162,14 @@ const PatientTable = (props) => {
         <Pagination.Prev
           onClick={() => {
             setUrl(links.prev.href);
+            console.log(links.prev.href);
           }}
           disabled={prevPageDisabled}
         ></Pagination.Prev>
         <Pagination.Next
           onClick={() => {
             setUrl(links.next.href);
+            console.log(links.next.href);
           }}
           disabled={nextPageDisabled}
         ></Pagination.Next>

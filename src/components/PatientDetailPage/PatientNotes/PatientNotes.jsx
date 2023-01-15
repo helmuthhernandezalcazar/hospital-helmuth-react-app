@@ -18,7 +18,13 @@ const PatientNotes = (props) => {
   return (
     <Container>
       <h2>Notas del paciente</h2>
-      <Table className="table-responsive table-sm align-middle table-edge table-hover table-nowrap mb-0">
+      <Table
+        striped
+        bordered
+        hover
+        size="sm"
+        className="table-responsive table-sm align-middle table-edge table-hover table-nowrap mb-0"
+      >
         <thead>
           <tr>
             <th>Nota</th>
@@ -29,10 +35,18 @@ const PatientNotes = (props) => {
           {notes.map((note, index) => {
             return (
               <tr key={index}>
-                <td className="col-md-4">
-                  <span>{note.note}</span>
-                </td>
                 <td className="col-md-8">
+                  <span
+                    style={{
+                      wordBreak: "break-word",
+                      whiteSpace: "pre-wrap",
+                      wordWrap: "break-word",
+                    }}
+                  >
+                    {note.note}
+                  </span>
+                </td>
+                <td className="col-md-4">
                   {new Date(note.date).toUTCString()}
                 </td>
               </tr>

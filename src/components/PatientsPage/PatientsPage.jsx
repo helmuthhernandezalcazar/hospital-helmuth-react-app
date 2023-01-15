@@ -37,7 +37,6 @@ const PatientsPage = () => {
       </Tab>
       <Tab eventKey="Registrar paciente" title="Registrar paciente">
         <Container>
-          <h1>Formulario de registro</h1>
           <PatientForm refreshTable={refreshTable}></PatientForm>
         </Container>
       </Tab>

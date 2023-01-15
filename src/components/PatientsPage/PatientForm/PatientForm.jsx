@@ -15,7 +15,11 @@ const PatientForm = (props) => {
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
     let patient = { ...data, hospitalizationDate: new Date() };
-    if (patient.room === "default" || waitingRoomSwitchCheked)
+    if (
+      patient.room === "default" ||
+      waitingRoomSwitchCheked ||
+      document.getElementById("defaultRoomSelector").selected
+    )
       patient = { ...patient, room: null };
     fetch("http://localhost:8080/patients", {
       method: "post",
@@ -109,6 +113,7 @@ const PatientForm = (props) => {
       className="form-group shadow p-3 mb-5 bg-body rounded"
       onSubmit={handleSubmit(onSubmit)}
     >
+      <h1>Formulario de registro</h1>
       <div className="row">
         <div className="col">
           <label>
@@ -183,7 +188,9 @@ const PatientForm = (props) => {
               if (!waitingRoomSwitchCheked) {
                 document.getElementById("defaultRoomSelector").selected = true;
                 document.getElementById("roomSelector").disabled = true;
-              } else document.getElementById("roomSelector").disabled = false;
+              } else {
+                document.getElementById("roomSelector").disabled = false;
+              }
             }}
           ></Form.Check>
         </div>
