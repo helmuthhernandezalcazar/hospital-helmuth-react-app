@@ -10,39 +10,63 @@ import NavBar from "./components/NavBar";
 import PatientDetailPage from "./components/PatientDetailPage";
 import PatientsPage from "./components/PatientsPage";
 import RoomList from "./components/RoomList/RoomList";
-import TestComponent from "./components/TestComponent";
+import LoginPage from "./components/LoginPage";
 
 const router = createBrowserRouter([
   {
     path: "/plantas",
-    element: <MedicalFLoorList />,
+    element: (
+      <>
+        <NavBar />
+        <MedicalFLoorList />
+      </>
+    ),
   },
   {
     path: "/plantas/:id/habitaciones",
-    element: <RoomList />,
+    element: (
+      <>
+        <NavBar />
+        <RoomList />
+      </>
+    ),
   },
   {
     path: "/",
-    element: <MainPage />,
+    element: (
+      <>
+        <NavBar />
+        <MainPage />
+      </>
+    ),
   },
   {
     path: "/pacientes",
-    element: <PatientsPage />,
+    element: (
+      <>
+        <NavBar />
+        <PatientsPage />
+      </>
+    ),
   },
   {
     path: "/paciente/:id",
-    element: <PatientDetailPage />,
+    element: (
+      <>
+        <NavBar />
+        <PatientDetailPage />
+      </>
+    ),
   },
   {
-    path: "/test",
-    element: <TestComponent />,
+    path: "/login",
+    element: <LoginPage />,
   },
 ]);
 
 function App() {
   return (
     <>
-      <NavBar></NavBar>
       <RouterProvider router={router} />
     </>
   );

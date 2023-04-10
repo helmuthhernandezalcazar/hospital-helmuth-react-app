@@ -8,7 +8,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "react-bootstrap";
-import { set } from "react-hook-form";
+import { authenticationService } from "../../../services/authentication/authenticationService";
 import { patientService } from "../../../services/patient/patientService";
 
 const PatientTable = (props) => {
@@ -24,7 +24,12 @@ const PatientTable = (props) => {
   const [nextPageDisabled, setNextPageDisabled] = useState(false);
   const [prevPageDisabled, setPrevPageDisabled] = useState(true);
   useEffect(() => {
-    fetch(url)
+    fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: authenticationService.getSessionToken(),
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         const { size, totalPages, number } = data.page;
