@@ -1,8 +1,10 @@
 import {
   BrowserRouter,
   createBrowserRouter,
+  Navigate,
   Route,
   RouterProvider,
+  Routes,
 } from "react-router-dom";
 import MainPage from "./components/MainPage";
 import MedicalFLoorList from "./components/MedicalFloorList";
@@ -11,64 +13,94 @@ import PatientDetailPage from "./components/PatientDetailPage";
 import PatientsPage from "./components/PatientsPage";
 import RoomList from "./components/RoomList/RoomList";
 import LoginPage from "./components/LoginPage";
-
-const router = createBrowserRouter([
-  {
-    path: "/plantas",
-    element: (
-      <>
-        <NavBar />
-        <MedicalFLoorList />
-      </>
-    ),
-  },
-  {
-    path: "/plantas/:id/habitaciones",
-    element: (
-      <>
-        <NavBar />
-        <RoomList />
-      </>
-    ),
-  },
-  {
-    path: "/",
-    element: (
-      <>
-        <NavBar />
-        <MainPage />
-      </>
-    ),
-  },
-  {
-    path: "/pacientes",
-    element: (
-      <>
-        <NavBar />
-        <PatientsPage />
-      </>
-    ),
-  },
-  {
-    path: "/paciente/:id",
-    element: (
-      <>
-        <NavBar />
-        <PatientDetailPage />
-      </>
-    ),
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-]);
+import { authenticationService } from "./services/authentication/authenticationService";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [loggedUser, setLoggedUser] = useState(
+    authenticationService.getSessionToken() !== null
+  );
+
+  useEffect(() => {
+    console.log(authenticationService.getSessionToken());
+    console.log(loggedUser);
+  }, [loggedUser]);
+
+  const login = () => setLoggedUser(true);
+  const logout = () => setLoggedUser(false);
+
   return (
-    <>
-      <RouterProvider router={router} />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/plantas"
+          element={
+            loggedUser ? (
+              <>
+                <NavBar />
+                <MedicalFLoorList />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/plantas/:id/habitaciones"
+          element={
+            loggedUser ? (
+              <>
+                <NavBar />
+                <RoomList />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/pacientes"
+          element={
+            loggedUser ? (
+              <>
+                <NavBar />
+                <PatientsPage />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/paciente/:id"
+          element={
+            loggedUser ? (
+              <>
+                <NavBar />
+                <PatientDetailPage />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/"
+          element={
+            loggedUser ? (
+              <>
+                <NavBar />
+                <MainPage />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/login" element={<LoginPage login={login} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

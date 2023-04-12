@@ -8,17 +8,10 @@ import { authenticationService } from "../../services/authentication/authenticat
 import getEmptyRooms from "../../services/room/getEmptyRooms";
 import hospitalicon from "./hospital.png";
 
-const LoginPage = () => {
+const LoginPage = (props) => {
   const { register, handleSubmit } = useForm();
   const [infoMsg, setInfoMsg] = useState("");
-  const [userSessionActive, setUserSessionActive] = useState(
-    authenticationService.getSessionToken !== null
-  );
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (userSessionActive) navigate("/");
-  }, [userSessionActive]);
 
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -36,7 +29,8 @@ const LoginPage = () => {
       if (!response.ok) setInfoMsg("error");
       if (response.ok) {
         setInfoMsg("succesful");
-        setUserSessionActive(true);
+        props.login();
+        navigate("/");
       }
       window.sessionStorage.setItem("token", authToken);
     });

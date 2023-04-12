@@ -19,7 +19,7 @@ function createBasicAuthHeader(username, password) {
 }
 
 function getSessionToken() {
-  return window.sessionStorage.getItem("token");
+  return sessionStorage.getItem("token");
 }
 
 export const authenticationService = {
