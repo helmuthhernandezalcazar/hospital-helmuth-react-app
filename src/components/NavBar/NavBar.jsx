@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import getMedicalSpecialty from "../../services/medicalFloor/getMedicalSpecialty";
+import LogOut from "./LogOut/LogOut";
 
 const NavBar = () => {
   const [medicalFloors, setMedicalFloors] = useState([]);
@@ -54,6 +55,7 @@ const NavBar = () => {
               </a>
             </li>
           </ul>
+          <LogOut />
         </div>
       </div>
     </nav>
