@@ -22,8 +22,13 @@ function getSessionToken() {
   return sessionStorage.getItem("token");
 }
 
+function deleteSessionToken() {
+  sessionStorage.removeItem("token");
+}
+
 export const authenticationService = {
   createBasicAuthHeader,
   executeAuthentication,
   getSessionToken,
+  deleteSessionToken,
 };
