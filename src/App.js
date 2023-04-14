@@ -27,7 +27,6 @@ function App() {
   }, [loggedUser]);
 
   const login = () => setLoggedUser(true);
-  const logout = () => setLoggedUser(false);
 
   return (
     <BrowserRouter>
@@ -98,7 +97,12 @@ function App() {
           }
         />
         <Route path="*" element={<Navigate to="/" />} />
-        <Route path="/login" element={<LoginPage login={login} />} />
+        <Route
+          path="/login"
+          element={
+            loggedUser ? <Navigate to="/" /> : <LoginPage login={login} />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
