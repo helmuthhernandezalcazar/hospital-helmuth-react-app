@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import getMedicalSpecialty from "../../services/medicalFloor/getMedicalSpecialty";
+import { medicalFloorService } from "../../services/medicalFloor/medicalFloorService";
 
 const MedicalFloorCard = (props) => {
   const medicalFloorId = props.medicalFloorId;
@@ -8,9 +8,9 @@ const MedicalFloorCard = (props) => {
   const [medicalFloor, setMedicalFloor] = useState({});
 
   useEffect(() => {
-    getMedicalSpecialty(medicalFloorId).then((medicalSpecialty) =>
-      setMedicalSpecialty(medicalSpecialty)
-    );
+    medicalFloorService
+      .getMedicalSpecialty(medicalFloorId)
+      .then((medicalSpecialty) => setMedicalSpecialty(medicalSpecialty));
   }, [medicalFloor]);
 
   useEffect(() => {

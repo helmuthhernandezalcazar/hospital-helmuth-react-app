@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import getMedicalSpecialty from "../../services/medicalFloor/getMedicalSpecialty";
+import { medicalFloorService } from "../../services/medicalFloor/medicalFloorService";
 import LogOut from "./LogOut/LogOut";
 
 const NavBar = () => {
   const [medicalFloors, setMedicalFloors] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/medicalFloors")
-      .then((response) => response.json())
-      .then((data) => setMedicalFloors(data._embedded.medicalFloors));
+    medicalFloorService
+      .getAll()
+      .then((medicalFloors) => setMedicalFloors(medicalFloors));
   }, []);
 
   /*
@@ -67,9 +68,9 @@ const MedicalFloorNavItem = (props) => {
   const medicalFloorId = props.medicalFloorId;
   const [medicalSpecialty, setMedicalSpecialty] = useState({});
   useEffect(() => {
-    getMedicalSpecialty(medicalFloorId).then((medicalSpecialty) =>
-      setMedicalSpecialty(medicalSpecialty)
-    );
+    medicalFloorService
+      .getMedicalSpecialty(medicalFloorId)
+      .then((medicalSpecialty) => setMedicalSpecialty(medicalSpecialty));
   }, [medicalFloorId]);
 
   return (

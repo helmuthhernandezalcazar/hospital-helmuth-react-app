@@ -5,7 +5,6 @@ import { authenticationService } from "../../../services/authentication/authenti
 import logoutIcon from "./logout.png";
 
 const LogOut = (props) => {
-  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const handleClose = () => setShowModal(false);
@@ -48,7 +47,7 @@ const LogOut = (props) => {
 const ModalLogOut = (props) => {
   const [show, setShow] = useState(props.showModal);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
