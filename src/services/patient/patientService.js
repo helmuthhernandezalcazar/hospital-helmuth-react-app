@@ -1,3 +1,5 @@
+import { authenticationService } from "../authentication/authenticationService";
+
 function getAll(params) {
   return fetch("http://localhost:8080/patients?projection=patientProjection", {
     params,
@@ -6,18 +8,24 @@ function getAll(params) {
 function discharge(patientId) {
   return fetch(`http://localhost:8080/patients/${patientId}`, {
     method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: authenticationService.getSessionToken(),
+    },
     body: JSON.stringify({
       dischargeDate: new Date(),
       room: null,
     }),
-    headers: {
-      "Content-type": "application/json",
-    },
   });
 }
 
 function getMeasurements(patientId) {
-  return fetch(`http://localhost:8080/patients/${patientId}/measurements`);
+  return fetch(`http://localhost:8080/patients/${patientId}/measurements`, {
+    method: "GET",
+    headers: {
+      Authorization: authenticationService.getSessionToken(),
+    },
+  });
 }
 
 export const patientService = { getAll, discharge, getMeasurements };

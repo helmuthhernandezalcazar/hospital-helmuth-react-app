@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Button, Col, Container, Row, Table } from "react-bootstrap";
 import { set, useForm } from "react-hook-form";
+import { authenticationService } from "../../../services/authentication/authenticationService";
 import getNotes from "../../../services/patient/getNotes";
 
 const PatientNotes = (props) => {
@@ -77,6 +78,7 @@ const AddNoteSection = (props) => {
       method: "post",
       headers: {
         "Content-Type": "application/json",
+        Authorization: authenticationService.getSessionToken(),
       },
       body: JSON.stringify(body),
     }).then((response) => {

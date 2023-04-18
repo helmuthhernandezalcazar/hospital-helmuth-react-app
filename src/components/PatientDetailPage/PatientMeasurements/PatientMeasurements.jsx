@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Alert, Col, Container, Row } from "react-bootstrap";
 import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
 import { useForm } from "react-hook-form";
+import { authenticationService } from "../../../services/authentication/authenticationService";
 import getMeasurements from "../../../services/patient/getMeasurements";
 
 const PatientMeasurements = (props) => {
@@ -44,7 +45,12 @@ const MeasurementRow = (props) => {
   const [measurement, setMeasurement] = useState(props.measurement);
   const [measurementType, setMeasurementType] = useState({});
   useEffect(() => {
-    fetch(props.measurementTypeRef)
+    fetch(props.measurementTypeRef, {
+      method: "GET",
+      headers: {
+        Authorization: authenticationService.getSessionToken(),
+      },
+    })
       .then((response) => response.json())
       .then((data) => setMeasurementType(data));
   }, [props.measurement]);
@@ -75,7 +81,12 @@ const AddMeasurementForm = (props) => {
   const { register, handleSubmit } = useForm();
 
   useEffect(() => {
-    fetch("http://localhost:8080/measurementTypes")
+    fetch("http://localhost:8080/measurementTypes", {
+      method: "GET",
+      headers: {
+        Authorization: authenticationService.getSessionToken(),
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         const { _embedded = {} } = data;
@@ -94,6 +105,7 @@ const AddMeasurementForm = (props) => {
       method: "post",
       headers: {
         "Content-Type": "application/json",
+        Authorization: authenticationService.getSessionToken(),
       },
       body: JSON.stringify(body),
     }).then((response) => {
@@ -160,7 +172,11 @@ const AddMeasurementForm = (props) => {
         </Col>
       </Row>
       <Row>
-        {response.status == 400 ? <Alert variant="danger">Error</Alert> : <></>}
+        {response.status === 400 ? (
+          <Alert variant="danger">Error</Alert>
+        ) : (
+          <></>
+        )}
       </Row>
     </form>
   );

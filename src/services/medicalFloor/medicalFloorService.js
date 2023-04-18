@@ -17,11 +17,13 @@ function getById(id) {
   fetch("http://localhost:8080/medicalFloors/" + id, {
     method: "GET",
     headers: {
-      AuthoriZation: authenticationService.getSessionToken(),
+      Authorization: authenticationService.getSessionToken(),
     },
   })
     .then((response) => response.json())
-    .then((data) => data);
+    .then((data) => {
+      return data;
+    });
 }
 
 function getMedicalSpecialty(medicalFloorId) {
@@ -30,7 +32,7 @@ function getMedicalSpecialty(medicalFloorId) {
     {
       method: "GET",
       headers: {
-        AuthoriZation: authenticationService.getSessionToken(),
+        Authorization: authenticationService.getSessionToken(),
       },
     }
   )
@@ -44,7 +46,7 @@ function getRooms(medicalFloorId) {
   return fetch(`http://localhost:8080/medicalFloors/${medicalFloorId}/rooms`, {
     method: "GET",
     headers: {
-      AuthoriZation: authenticationService.getSessionToken(),
+      Authorization: authenticationService.getSessionToken(),
     },
   })
     .then((response) => response.json())

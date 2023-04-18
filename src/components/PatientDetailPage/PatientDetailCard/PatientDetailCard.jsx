@@ -12,6 +12,7 @@ import {
 import { propTypes } from "react-bootstrap/esm/Image";
 import { set, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+import { authenticationService } from "../../../services/authentication/authenticationService";
 import discharge from "../../../services/patient/discharge";
 import getRoom from "../../../services/patient/getRoom";
 import getTriage from "../../../services/patient/getTriage";
@@ -29,7 +30,13 @@ const PatientDetailCard = (props) => {
 
   useEffect(() => {
     fetch(
-      `http://localhost:8080/patients/${patientId}?projection=patientProjection`
+      `http://localhost:8080/patients/${patientId}?projection=patientProjection`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: authenticationService.getSessionToken(),
+        },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -152,6 +159,7 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: authenticationService.getSessionToken(),
       },
       body: JSON.stringify(patient),
     }).then((response) => {

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Form } from "react-bootstrap";
 import { propTypes } from "react-bootstrap/esm/Image";
 import { useForm } from "react-hook-form";
+import { authenticationService } from "../../../services/authentication/authenticationService";
 import getEmptyRooms from "../../../services/room/getEmptyRooms";
 
 const PatientForm = (props) => {
@@ -25,6 +26,7 @@ const PatientForm = (props) => {
       method: "post",
       headers: {
         "Content-Type": "application/json",
+        Authorization: authenticationService.getSessionToken(),
       },
       body: JSON.stringify(patient),
     }).then((response) => {
