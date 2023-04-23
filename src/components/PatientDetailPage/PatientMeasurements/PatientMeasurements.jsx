@@ -88,7 +88,10 @@ const PatientMeasurements = (props) => {
           })}
         </tbody>
       </Table>
-      <Pagination>
+      <Pagination
+        size="lg"
+        style={{ display: "flex", justifyContent: "right", marginTop: "16px" }}
+      >
         <Pagination.Prev
           onClick={() => {
             setUrl(links.prev.href);
