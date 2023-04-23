@@ -6,13 +6,14 @@ import logoutIcon from "./logout.png";
 
 const LogOut = (props) => {
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleClose = () => setShowModal(false);
 
   const handleAccept = () => {
     authenticationService.deleteSessionToken();
     setShowModal(false);
-    window.location.reload(false);
+    navigate("/");
   };
 
   return (

@@ -11,9 +11,10 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    medicalFloorService
-      .getAll()
-      .then((medicalFloors) => setMedicalFloors(medicalFloors));
+    if (authenticationService.getSessionToken() !== null)
+      medicalFloorService
+        .getAll()
+        .then((medicalFloors) => setMedicalFloors(medicalFloors));
   }, []);
 
   return (
