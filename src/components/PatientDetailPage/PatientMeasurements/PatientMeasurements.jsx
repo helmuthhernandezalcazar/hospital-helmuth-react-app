@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Alert, Col, Container, Row } from "react-bootstrap";
+import { Alert, Col, Container, Pagination, Row, Table } from "react-bootstrap";
 import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
 import { useForm } from "react-hook-form";
 import { authenticationService } from "../../../services/authentication/authenticationService";
@@ -11,65 +11,105 @@ const PatientMeasurements = (props) => {
   const patientId = props.patientId;
   const [measurements, setMeasurements] = useState([]);
   const [refreshToggle, setRefreshToggle] = useState(false);
-
-  useEffect(() => {
-    getMeasurements(patientId).then((measurements) =>
-      setMeasurements(measurements)
-    );
-  }, [refreshToggle]);
-
-  const refreshTable = () => {
-    setRefreshToggle(!refreshToggle);
-  };
-  return (
-    <Container>
-      <h2>Mediciones</h2>
-      {measurements.map((measurement, index) => {
-        return (
-          <MeasurementRow
-            key={index}
-            measurement={measurement}
-            measurementTypeRef={measurement._links.measurementType.href}
-          ></MeasurementRow>
-        );
-      })}
-      <AddMeasurementForm
-        patientId={props.patientId}
-        refreshTable={refreshTable}
-      />
-    </Container>
+  const [sort, setSort] = useState("date,desc");
+  const [links, setLinks] = useState({});
+  const [nextPageDisabled, setNextPageDisabled] = useState(false);
+  const [prevPageDisabled, setPrevPageDisabled] = useState(true);
+  const [measurementTypeSelected, setMeasurementTypeSelected] = useState(
+    "/measurementTypes/1"
   );
-};
+  const [url, setUrl] = useState(
+    `http://localhost:8080/measurements/search/findByPatientAndMeasurementType?patient=/patients/${patientId}&measurementType=${measurementTypeSelected}&projection=measurementProjection&sort=${sort}`
+  );
 
-const MeasurementRow = (props) => {
-  const [measurement, setMeasurement] = useState(props.measurement);
-  const [measurementType, setMeasurementType] = useState({});
   useEffect(() => {
-    fetch(props.measurementTypeRef, {
+    fetch(url, {
       method: "GET",
       headers: {
         Authorization: authenticationService.getSessionToken(),
       },
     })
       .then((response) => response.json())
-      .then((data) => setMeasurementType(data));
-  }, [props.measurement]);
+      .then((data) => {
+        setMeasurements(data._embedded.measurements);
+        setLinks(data._links);
+        data._links.next !== undefined
+          ? setNextPageDisabled(false)
+          : setNextPageDisabled(true);
+        data._links.prev !== undefined
+          ? setPrevPageDisabled(false)
+          : setPrevPageDisabled(true);
+      });
+  }, [refreshToggle, url]);
 
+  useEffect(() => {
+    setUrl(
+      `http://localhost:8080/measurements/search/findByPatientAndMeasurementType?patient=/patients/${patientId}&measurementType=${measurementTypeSelected}&projection=measurementProjection&sort=${sort}`
+    );
+  }, [measurementTypeSelected]);
+  const refreshTable = () => {
+    setRefreshToggle(!refreshToggle);
+  };
   return (
-    <Row>
-      <Col className="col-md-4">
-        <span>{measurement.measurementValue}</span>
-      </Col>
-      <Col>
-        <span>{measurementType.unit}</span>
-      </Col>
-      <Col>
-        <span>{measurementType.measurementType}</span>
-      </Col>
-      <Col>
-        <span>{new Date(measurement.date).toUTCString()}</span>
-      </Col>
-    </Row>
+    <Container>
+      <Table
+        striped
+        bordered
+        hover
+        size="sm"
+        className="table-responsive table-sm align-middle table-edge table-hover table-nowrap mb-0"
+      >
+        <thead>
+          <tr>
+            <th>Valor</th>
+            <th>Unidad</th>
+            <th>Tipo de medición</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {measurements.map((measurement, index) => {
+            return (
+              <tr key={index}>
+                <td className="col-md-auto">
+                  <span>{measurement.measurementValue}</span>
+                </td>
+                <td>
+                  <span>{measurement.measurementTypeUnit}</span>
+                </td>
+                <td>
+                  <span>{measurement.measurementType}</span>
+                </td>
+                <td>
+                  <span>{new Date(measurement.date).toUTCString()}</span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+      <Pagination>
+        <Pagination.Prev
+          onClick={() => {
+            setUrl(links.prev.href);
+            console.log(links.prev.href);
+          }}
+          disabled={prevPageDisabled}
+        ></Pagination.Prev>
+        <Pagination.Next
+          onClick={() => {
+            setUrl(links.next.href);
+            console.log(links.next.href);
+          }}
+          disabled={nextPageDisabled}
+        ></Pagination.Next>
+      </Pagination>
+      <AddMeasurementForm
+        patientId={props.patientId}
+        setMeasurementTypeSelected={setMeasurementTypeSelected}
+        refreshTable={refreshTable}
+      />
+    </Container>
   );
 };
 
@@ -147,10 +187,14 @@ const AddMeasurementForm = (props) => {
           <label>
             Medición
             <select
+              onChangeCapture={(e) => {
+                props.setMeasurementTypeSelected(e.target.value);
+                console.log(e.target.value.split("http://localhost:8080"));
+              }}
               name="measurementTypes"
               id="measurementTypeSelectBox"
               className="form-control"
-              defaultValue="default"
+              defaultValue="http://localhost:8080/measurementTypes/1"
               {...register("measurementType")}
             >
               <option value="default" disabled>
