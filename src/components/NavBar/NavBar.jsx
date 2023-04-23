@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import getMedicalSpecialty from "../../services/medicalFloor/getMedicalSpecialty";
 import { medicalFloorService } from "../../services/medicalFloor/medicalFloorService";
 import LogOut from "./LogOut/LogOut";
+import { authenticationService } from "../../services/authentication/authenticationService";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [medicalFloors, setMedicalFloors] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     medicalFloorService
@@ -13,51 +16,45 @@ const NavBar = () => {
       .then((medicalFloors) => setMedicalFloors(medicalFloors));
   }, []);
 
-  /*
-  return (
-    <Navbar bg="dark" variant="dark">
-      <Container>
-        <Navbar.Brand href="/">Hospital Alcázar</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav"></Navbar.Toggle>
-        <Nav className="me-auto">
-          <Nav.Link href="/">Inicio</Nav.Link>
-          <Nav.Link href="/plantas">Plantas médicas</Nav.Link>
-          <Nav.Link href="/pacientes">Pacientes</Nav.Link>
-        </Nav>
-      </Container>
-    </Navbar>
-  );*/
   return (
     <nav className="navbar navbar-expand navbar-dark bg-dark">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
           Hospital Alcázar
         </a>
-        <div className="collapse navbar-collapse">
-          <ul className="navbar-nav me-auto">
-            <NavDropdown title="Plantas">
-              {medicalFloors.map((medicalFloor, index) => {
-                const self = medicalFloor._links.self.href;
-                const id = self
-                  .split("http://localhost:8080/medicalFloors/")
-                  .pop();
-                return (
-                  <MedicalFloorNavItem
-                    key={index}
-                    medicalFloor={medicalFloor}
-                    medicalFloorId={id}
-                  />
-                );
-              })}
-            </NavDropdown>
-            <li className="nav-item">
-              <a className="nav-link" href="/pacientes">
-                Pacientes
-              </a>
-            </li>
-          </ul>
-          <LogOut />
-        </div>
+        {authenticationService.getSessionToken() !== null ? (
+          <>
+            <div className="collapse navbar-collapse">
+              <ul className="navbar-nav me-auto">
+                <NavDropdown title="Plantas">
+                  {medicalFloors.map((medicalFloor, index) => {
+                    const self = medicalFloor._links.self.href;
+                    const id = self
+                      .split("http://localhost:8080/medicalFloors/")
+                      .pop();
+                    return (
+                      <MedicalFloorNavItem
+                        key={index}
+                        medicalFloor={medicalFloor}
+                        medicalFloorId={id}
+                      />
+                    );
+                  })}
+                </NavDropdown>
+                <li className="nav-item">
+                  <a className="nav-link" href="/pacientes">
+                    Pacientes
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <LogOut />
+          </>
+        ) : (
+          <Button variant="light" onClick={() => navigate("/login")}>
+            Iniciar sesión
+          </Button>
+        )}
       </div>
     </nav>
   );

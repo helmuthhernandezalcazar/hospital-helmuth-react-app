@@ -86,14 +86,10 @@ function App() {
         <Route
           path="/"
           element={
-            loggedUser ? (
-              <>
-                <NavBar />
-                <MainPage />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )
+            <>
+              <NavBar />
+              <MainPage />
+            </>
           }
         />
         <Route path="*" element={<Navigate to="/" />} />
