@@ -1,6 +1,6 @@
 function executeAuthentication(username, password) {
   let basicAuthHeader = createBasicAuthHeader(username, password);
-  return fetch("http://localhost:8080/patients", {
+  return fetch("http://localhost:8080/login", {
     headers: {
       authorization: basicAuthHeader,
     },

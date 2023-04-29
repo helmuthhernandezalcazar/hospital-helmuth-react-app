@@ -14,6 +14,7 @@ const LogOut = (props) => {
     authenticationService.deleteSessionToken();
     setShowModal(false);
     navigate("/");
+    window.location.reload();
   };
 
   return (
