@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CarouselHospital from "./CarouselHospital/CarouselHospital";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import {
+  Card,
+  Col,
+  Container,
+  Row,
+  Toast,
+  ToastContainer,
+} from "react-bootstrap";
 import nurseAndPatientImg from "./nurseandpatient.png";
 import doctorsImg from "./doctors.png";
+import UserInfo from "../UserContext/UserInfo";
 
 const MainPage = () => {
+  const [showA, setShowA] = useState(true);
+  const toggleShowA = () => {
+    console.log(UserInfo);
+    setShowA(!showA);
+  };
+  useEffect(() => {
+    console.log(UserInfo);
+  }, []);
   return (
     <>
       <CarouselHospital></CarouselHospital>
@@ -98,6 +114,26 @@ const MainPage = () => {
           </Row>
         </Container>
       </Container>
+      {UserInfo.firstName !== undefined ? (
+        <ToastContainer
+          position="top-end"
+          style={{ marginRight: "72px", marginTop: "8px" }}
+        >
+          <Toast show={showA} onClose={toggleShowA} bg="success">
+            <Toast.Header>
+              <strong className="me-auto">
+                Bienvenido {UserInfo.firstName + " " + UserInfo.lastName}!
+              </strong>
+            </Toast.Header>
+            <Toast.Body>
+              Has iniciado sesión correctamente en el sistema de gestion
+              hospitalario
+            </Toast.Body>
+          </Toast>
+        </ToastContainer>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

@@ -3,6 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import { authenticationService } from "../../../services/authentication/authenticationService";
 import logoutIcon from "./logout.png";
+import UserInfo from "../../UserContext/UserInfo";
 
 const LogOut = (props) => {
   const [showModal, setShowModal] = useState(false);
@@ -12,6 +13,9 @@ const LogOut = (props) => {
 
   const handleAccept = () => {
     authenticationService.deleteSessionToken();
+
+    delete UserInfo.firstName;
+
     setShowModal(false);
     navigate("/");
     window.location.reload();

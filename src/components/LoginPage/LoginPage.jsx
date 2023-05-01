@@ -7,6 +7,7 @@ import { redirect, useNavigate } from "react-router-dom";
 import { authenticationService } from "../../services/authentication/authenticationService";
 import getEmptyRooms from "../../services/room/getEmptyRooms";
 import hospitalicon from "./hospital.png";
+import UserInfo from "../UserContext/UserInfo";
 
 const LoginPage = (props) => {
   const { register, handleSubmit } = useForm();
@@ -20,20 +21,31 @@ const LoginPage = (props) => {
       data.password
     );
     fetch("http://localhost:8080/login", {
-      method: "POST",
+      method: "GET",
       headers: {
         Authorization: authToken,
       },
-      body: JSON.stringify(data),
-    }).then((response) => {
-      if (!response.ok) setInfoMsg("error");
-      if (response.ok) {
-        setInfoMsg("succesful");
-        props.login();
+    })
+      .then((response) => {
+        if (response.status !== 200) setInfoMsg("error");
+        if (response.status === 200) {
+          setInfoMsg("succesful");
+          props.login();
+          window.sessionStorage.setItem("token", authToken);
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        UserInfo.id = data.id;
+        UserInfo.firstName = data.firstName;
+        UserInfo.lastName = data.lastName;
+        UserInfo.dni = data.dni;
+        UserInfo.phoneNumber = data.phoneNumber;
+        UserInfo.email = data.email;
+        UserInfo.employeeType = data.employeeType;
         navigate("/");
-      }
-      window.sessionStorage.setItem("token", authToken);
-    });
+      });
   };
 
   return (
