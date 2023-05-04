@@ -11,16 +11,17 @@ import {
 import nurseAndPatientImg from "./nurseandpatient.png";
 import doctorsImg from "./doctors.png";
 import UserInfo from "../UserContext/UserInfo";
+import { authenticationService } from "../../services/authentication/authenticationService";
 
-const MainPage = () => {
+const MainPage = ({ userLogged }) => {
   const [showA, setShowA] = useState(true);
   const toggleShowA = () => {
     console.log(UserInfo);
     setShowA(!showA);
   };
   useEffect(() => {
-    console.log(UserInfo);
-  }, []);
+    console.log("logged" + userLogged);
+  }, [userLogged]);
   return (
     <>
       <CarouselHospital></CarouselHospital>
@@ -114,7 +115,7 @@ const MainPage = () => {
           </Row>
         </Container>
       </Container>
-      {UserInfo.firstName !== undefined ? (
+      {sessionStorage.getItem("token") !== null ? (
         <ToastContainer
           position="top-end"
           style={{ marginRight: "72px", marginTop: "8px" }}
@@ -122,7 +123,13 @@ const MainPage = () => {
           <Toast show={showA} onClose={toggleShowA} bg="success">
             <Toast.Header>
               <strong className="me-auto">
-                Bienvenido {UserInfo.firstName + " " + UserInfo.lastName}!
+                Bienvenido{" "}
+                {
+                  authenticationService
+                    .getUsernameFromToken()
+                    .split("@helmuthhospital.com")[0]
+                }
+                !
               </strong>
             </Toast.Header>
             <Toast.Body>

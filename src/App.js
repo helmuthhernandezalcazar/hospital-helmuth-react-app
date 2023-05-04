@@ -88,7 +88,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <MainPage />
+              <MainPage loggedUser={loggedUser} />
             </>
           }
         />

@@ -32,8 +32,8 @@ const LoginPage = (props) => {
         setInfoMsg("succesful");
         props.login();
         window.sessionStorage.setItem("token", authToken);
+        navigate("/");
       }
-      navigate("/");
     });
   };
 
