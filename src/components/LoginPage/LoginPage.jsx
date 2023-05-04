@@ -25,27 +25,16 @@ const LoginPage = (props) => {
       headers: {
         Authorization: authToken,
       },
-    })
-      .then((response) => {
-        if (response.status !== 200) setInfoMsg("error");
-        if (response.status === 200) {
-          setInfoMsg("succesful");
-          props.login();
-          window.sessionStorage.setItem("token", authToken);
-          return response.json();
-        }
-      })
-      .then((data) => {
-        console.log(data);
-        UserInfo.id = data.id;
-        UserInfo.firstName = data.firstName;
-        UserInfo.lastName = data.lastName;
-        UserInfo.dni = data.dni;
-        UserInfo.phoneNumber = data.phoneNumber;
-        UserInfo.email = data.email;
-        UserInfo.employeeType = data.employeeType;
-        navigate("/");
-      });
+    }).then((response) => {
+      console.log(data);
+      if (response.status !== 200) setInfoMsg("error");
+      if (response.status === 200) {
+        setInfoMsg("succesful");
+        props.login();
+        window.sessionStorage.setItem("token", authToken);
+      }
+      navigate("/");
+    });
   };
 
   return (

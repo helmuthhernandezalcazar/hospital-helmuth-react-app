@@ -26,9 +26,16 @@ function deleteSessionToken() {
   sessionStorage.removeItem("token");
 }
 
+function getUsernameFromToken() {
+  const decodedCredentials = window.atob(getSessionToken().slice(6));
+  const username = decodedCredentials.split(":")[0];
+  return username;
+}
+
 export const authenticationService = {
   createBasicAuthHeader,
   executeAuthentication,
   getSessionToken,
   deleteSessionToken,
+  getUsernameFromToken,
 };

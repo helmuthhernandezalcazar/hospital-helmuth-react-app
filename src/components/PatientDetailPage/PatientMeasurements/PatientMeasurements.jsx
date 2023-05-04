@@ -64,6 +64,7 @@ const PatientMeasurements = (props) => {
             <th>Valor</th>
             <th>Unidad</th>
             <th>Tipo de medición</th>
+            <th>Empleado</th>
             <th>Fecha</th>
           </tr>
         </thead>
@@ -79,6 +80,9 @@ const PatientMeasurements = (props) => {
                 </td>
                 <td>
                   <span>{measurement.measurementType}</span>
+                </td>
+                <td>
+                  {measurement.employeeEmail.split("@helmuthhospital.com")[0]}
                 </td>
                 <td>
                   <span>{new Date(measurement.date).toUTCString()}</span>
@@ -137,12 +141,19 @@ const AddMeasurementForm = (props) => {
       });
   }, []);
 
-  function onSubmit(data) {
-    const body = {
+  async function onSubmit(data) {
+    const userRef = await getEmployeeRef();
+    let body = {
       ...data,
       date: new Date(),
       patient: "/patients/" + patientId,
+      employee: userRef,
     };
+    if (body.measurementType === "")
+      body = {
+        ...body,
+        measurementType: "http://localhost:8080/measurementTypes/1",
+      };
     console.log(body);
     fetch("http://localhost:8080/measurements", {
       method: "post",
@@ -160,6 +171,21 @@ const AddMeasurementForm = (props) => {
     //window.location.reload(false);
   }
 
+  async function getEmployeeRef() {
+    const username = authenticationService.getUsernameFromToken();
+    return fetch(
+      `http://localhost:8080/employees/search/findByEmail?email=${username}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authenticationService.getSessionToken(),
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => data._links.self.href);
+  }
   function getMeasurementTypeOptions() {
     return measurementTypes.map((type, index) => {
       return (
