@@ -12,6 +12,7 @@ import {
 import { set, useForm } from "react-hook-form";
 import { authenticationService } from "../../../services/authentication/authenticationService";
 import getNotes from "../../../services/patient/getNotes";
+import { employeeService } from "../../../services/employee/employeeService";
 
 const PatientNotes = (props) => {
   const patientId = props.patientId;
@@ -21,7 +22,7 @@ const PatientNotes = (props) => {
   const [pageSize, setPageSize] = useState(10);
   const [sort, setSort] = useState("date,desc");
   const [url, setUrl] = useState(
-    `http://localhost:8080/notes/search/findByPatient?patient=/patients/${patientId}&sort=${sort}`
+    `http://localhost:8080/notes/search/findByPatient?patient=/patients/${patientId}&projection=noteProjection&sort=${sort}`
   );
   const [links, setLinks] = useState({});
   const [nextPageDisabled, setNextPageDisabled] = useState(false);
@@ -71,6 +72,7 @@ const PatientNotes = (props) => {
         <thead>
           <tr>
             <th>Nota</th>
+            <th>Empleado</th>
             <th>Fecha</th>
           </tr>
         </thead>
@@ -89,6 +91,7 @@ const PatientNotes = (props) => {
                     {note.note}
                   </span>
                 </td>
+                <td>{note.employeeEmail.split("@helmuthhospital.com")[0]}</td>
                 <td className="col-md-4">
                   {new Date(note.date).toUTCString()}
                 </td>
@@ -131,12 +134,14 @@ const AddNoteSection = (props) => {
   const [response, setResponse] = useState({});
   const { register, handleSubmit, reset } = useForm();
 
-  function onSubmit(data) {
+  async function onSubmit(data) {
+    const loggedEmployee = await employeeService.findEmployeeByEmailOnToken();
     console.log(JSON.stringify(data, null, 2));
     const body = {
       date: new Date(),
       note: data.note.trim(),
       patient: "/patients/" + patientId,
+      employee: loggedEmployee._links.self.href,
     };
 
     console.log(body);

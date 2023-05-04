@@ -6,6 +6,7 @@ import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
 import { useForm } from "react-hook-form";
 import { authenticationService } from "../../../services/authentication/authenticationService";
 import getMeasurements from "../../../services/patient/getMeasurements";
+import { employeeService } from "../../../services/employee/employeeService";
 
 const PatientMeasurements = (props) => {
   const patientId = props.patientId;
@@ -142,12 +143,12 @@ const AddMeasurementForm = (props) => {
   }, []);
 
   async function onSubmit(data) {
-    const userRef = await getEmployeeRef();
+    const loggedEmployee = await employeeService.findEmployeeByEmailOnToken();
     let body = {
       ...data,
       date: new Date(),
       patient: "/patients/" + patientId,
-      employee: userRef,
+      employee: loggedEmployee._links.self.href,
     };
     if (body.measurementType === "")
       body = {
