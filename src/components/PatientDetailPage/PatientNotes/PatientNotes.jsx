@@ -93,7 +93,7 @@ const PatientNotes = (props) => {
                 </td>
                 <td>{note.employeeEmail.split("@helmuthhospital.com")[0]}</td>
                 <td className="col-md-4">
-                  {new Date(note.date).toUTCString()}
+                  {new Date(note.date).toLocaleString("es-ES")}
                 </td>
               </tr>
             );
@@ -166,8 +166,6 @@ const AddNoteSection = (props) => {
       className="form-group shadow p-3 mb-5 bg-body rounded"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h3>Nueva nota</h3>
-
       <Form.Group>
         <Form.Control
           as="textarea"

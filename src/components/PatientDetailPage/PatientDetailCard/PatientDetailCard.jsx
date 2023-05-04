@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Badge,
   Button,
   Card,
   Col,
@@ -7,7 +8,10 @@ import {
   Form,
   ListGroup,
   ListGroupItem,
+  Modal,
+  OverlayTrigger,
   Row,
+  Tooltip,
 } from "react-bootstrap";
 import { propTypes } from "react-bootstrap/esm/Image";
 import { set, useForm } from "react-hook-form";
@@ -27,6 +31,7 @@ const PatientDetailCard = (props) => {
   const [patientTriage, setPatientTriage] = useState({});
   const [refreshToggle, setRefreshToggle] = useState(false);
   const [modify, setModify] = useState(false);
+  const [patientDischarged, setPatientDischarged] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -41,6 +46,8 @@ const PatientDetailCard = (props) => {
       .then((response) => response.json())
       .then((data) => {
         setPatient(data);
+        setPatientDischarged(data.dischargeDate !== null);
+        console.log(data.dischargeDate);
       });
   }, [refreshToggle]);
 
@@ -59,6 +66,7 @@ const PatientDetailCard = (props) => {
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
+        setPatientDischarged(true);
         updateData();
       });
 
@@ -69,68 +77,114 @@ const PatientDetailCard = (props) => {
     setModify(show);
   }
   return (
-    <Container>
+    <Container
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginTop: "16px",
+      }}
+    >
       <Row>
         <Col>
-          <Card style={{ width: "38em", margin: 20 }}>
+          <Card style={{ width: "60em", margin: 20 }}>
             <Card.Header as="h2">
               {patient.firstName} {patient.lastName}
             </Card.Header>
             <Card.Body>
-              <ListGroup>
-                <ListGroupItem>
-                  Habitación:{" "}
-                  {patient.dischargeDate === null ? patientRoom.name : ""}
-                </ListGroupItem>
-                <ListGroupItem>
-                  Diagnóstico: {patient.medicalDiagnosis}
-                </ListGroupItem>
-                <ListGroupItem>
-                  Hospitalización:{" "}
-                  {new Date(patient.hospitalizationDate).toLocaleString(
-                    "es-ES"
-                  )}
-                </ListGroupItem>
+              <Row>
+                <Col>
+                  <ListGroup>
+                    <ListGroupItem>Nombre: {patient.firstName}</ListGroupItem>
+                    <ListGroupItem>Apellidos: {patient.lastName}</ListGroupItem>
+                    <ListGroupItem>DNI: {patient.dni}</ListGroupItem>
 
-                <ListGroupItem>
-                  Alta:
-                  {patient.dischargeDate !== null
-                    ? new Date(patient.dischargeDate).toLocaleString("es-ES")
-                    : ""}
-                </ListGroupItem>
+                    <ListGroupItem>
+                      Teléfono: {patient.phoneNumber}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      Fecha registro:{" "}
+                      {new Date(patient.hospitalizationDate).toLocaleString(
+                        "es-ES"
+                      )}
+                    </ListGroupItem>
+                    <ListGroupItem>Síntomas: {patient.symptoms}</ListGroupItem>
+                  </ListGroup>
+                </Col>
+                <Col>
+                  <ListGroup>
+                    <ListGroupItem>
+                      Habitación:{" "}
+                      {patient.dischargeDate === null ? patientRoom.name : ""}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      Planta: {patient.roomMedicalSpecialty}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      Diagnóstico: {patient.medicalDiagnosis}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      Fecha hospitalización:{" "}
+                      {new Date(patient.hospitalizationDate).toLocaleString(
+                        "es-ES"
+                      )}
+                    </ListGroupItem>
 
-                <ListGroupItem>Síntomas: {patient.symptoms}</ListGroupItem>
-                <ListGroupItem>
-                  Triaje: {patientTriage.name} ({patientTriage.level})
-                </ListGroupItem>
-                <ListGroupItem>Dni: {patient.dni}</ListGroupItem>
-                <ListGroupItem>
-                  Núm. teléfono: {patient.phoneNumber}
-                </ListGroupItem>
-              </ListGroup>
-              {patient.dischargeDate === null ? (
-                <Button onClick={(event) => dischargePatient()}>
-                  Dar de alta
-                </Button>
-              ) : (
-                <></>
-              )}
-              <Button onClick={() => setModify(true)}>Modificar datos</Button>
+                    <ListGroupItem>
+                      Triaje: {patientTriage.name} ({patientTriage.level})
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      Fecha alta:{" "}
+                      {patient.dischargeDate !== null
+                        ? new Date(patient.dischargeDate).toLocaleString(
+                            "es-ES"
+                          )
+                        : ""}
+                    </ListGroupItem>
+                  </ListGroup>
+                  <Container
+                    style={{
+                      display: "flex",
+                      justifyContent: "right",
+                      marginTop: "16px",
+                    }}
+                  >
+                    {!patientDischarged ? (
+                      <Button
+                        variant="outline-secondary"
+                        onClick={(event) => dischargePatient()}
+                      >
+                        Dar de alta
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
+                    <Button
+                      variant="primary"
+                      disabled={patientDischarged}
+                      onClick={() => setModify(true)}
+                      style={{ marginLeft: "8px" }}
+                    >
+                      Modificar datos
+                    </Button>
+                  </Container>
+                </Col>
+              </Row>
             </Card.Body>
           </Card>
         </Col>
-        <Col>
-          {modify ? (
-            <ModifyPatient
-              actualPatient={patient}
-              showModifyForm={showModifyForm}
-              updateData={updateData}
-            ></ModifyPatient>
-          ) : (
-            <></>
-          )}
-        </Col>
       </Row>
+      <Modal show={modify} onHide={showModifyForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modificar datos del paciente</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <ModifyPatient
+            actualPatient={patient}
+            showModifyForm={showModifyForm}
+            updateData={updateData}
+          ></ModifyPatient>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
@@ -201,7 +255,7 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
           {...register("room")}
         >
           <option id="defaultRoomSelector" value="notModify">
-            No modificar
+            Seleccionar...
           </option>
           {getEmptyRoomsOptions()}
         </select>
@@ -218,11 +272,8 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
           name="triage"
           defaultValue="notModify"
           {...register("triage")}
-          style={{ fontWeight: "bold" }}
         >
-          <option value="notModify" style={{ backgroundColor: "#ff8080" }}>
-            No modificar
-          </option>
+          <option value="notModify">Selecionar...</option>
           <option value="/triages/1" style={{ backgroundColor: "#ff8080" }}>
             Nivel 1 - Atención inmediata
           </option>
@@ -249,7 +300,6 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
         className="form-group shadow p-3 mb-5 bg-body rounded"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h2>Modificar datos</h2>
         <div className="row">
           <div className="col">
             <label>
@@ -327,18 +377,49 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
             />
           </label>
         </div>
-        <div className="row">{getTriageSelect()}</div>
-        <div className="row">{getRoomSelect()}</div>
+        <div className="row">
+          <OverlayTrigger
+            placement={"right"}
+            overlay={
+              <Tooltip>
+                no selecionar mantendrá el valor anterior {actualPatient.triage}
+              </Tooltip>
+            }
+          >
+            {getTriageSelect()}
+          </OverlayTrigger>
+        </div>
+        <div className="row">
+          <OverlayTrigger
+            placement={"right"}
+            overlay={
+              <Tooltip>
+                no selecionar mantendrá el valor anterior {actualPatient.triage}
+              </Tooltip>
+            }
+          >
+            {getRoomSelect()}
+          </OverlayTrigger>
+        </div>
 
         <div className="row">
-          <div className="col" style={{ marginTop: 20 }}>
-            <input
-              type="submit"
-              className="btn btn-primary"
-              value="Guardar cambios"
-            />
-            <Button variant="secondary" onClick={() => showModifyForm(false)}>
+          <div
+            className="col"
+            style={{ marginTop: 20, display: "flex", justifyContent: "right" }}
+          >
+            <Button
+              variant="secondary outline"
+              onClick={() => showModifyForm(false)}
+            >
               Cancelar
+            </Button>
+
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ marginLeft: "8px" }}
+            >
+              Guardar cambios
             </Button>
             <p>{infoMsg}</p>
           </div>

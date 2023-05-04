@@ -38,7 +38,7 @@ const LogOut = (props) => {
           <Modal.Title>¿Seguro que quiere cerrar sesión?</Modal.Title>
         </Modal.Header>
         <Modal.Footer>
-          <Button variant="outline-secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
           <Button variant="primary" onClick={handleAccept}>

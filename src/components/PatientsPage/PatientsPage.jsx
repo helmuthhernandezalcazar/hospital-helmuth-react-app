@@ -31,7 +31,6 @@ const PatientsPage = () => {
     <Tabs className="mb-3" defaultActiveKey="Lista pacientes">
       <Tab eventKey="Lista pacientes" title="Lista pacientes">
         <Container>
-          <h1>Lista completa</h1>
           <PatientTable refreshToggle={refreshToggle}></PatientTable>
         </Container>
       </Tab>

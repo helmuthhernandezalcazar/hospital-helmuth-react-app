@@ -86,7 +86,9 @@ const PatientMeasurements = (props) => {
                   {measurement.employeeEmail.split("@helmuthhospital.com")[0]}
                 </td>
                 <td>
-                  <span>{new Date(measurement.date).toUTCString()}</span>
+                  <span>
+                    {new Date(measurement.date).toLocaleString("es-ES")}
+                  </span>
                 </td>
               </tr>
             );
@@ -215,7 +217,7 @@ const AddMeasurementForm = (props) => {
         </Col>
         <Col>
           <label>
-            Medición
+            Tipo
             <select
               onChangeCapture={(e) => {
                 props.setMeasurementTypeSelected(e.target.value);
