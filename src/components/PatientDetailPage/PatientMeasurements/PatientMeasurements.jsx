@@ -145,6 +145,7 @@ const AddMeasurementForm = (props) => {
   }, []);
 
   async function onSubmit(data) {
+    setErrorResponse(null);
     const loggedEmployee = await employeeService.findEmployeeByEmailOnToken();
     let body = {
       ...data,
@@ -250,14 +251,14 @@ const AddMeasurementForm = (props) => {
             value="Añadir"
             style={{ marginTop: 20 }}
           />
+          {errorResponse !== null ? (
+            <Alert variant="danger" style={{ marginTop: "8px" }}>
+              {errorResponse.message}
+            </Alert>
+          ) : (
+            <></>
+          )}
         </Col>
-        {errorResponse !== null ? (
-          <Alert variant="danger" style={{ marginTop: "8px" }}>
-            {errorResponse.message}
-          </Alert>
-        ) : (
-          <></>
-        )}
       </Row>
       <Row></Row>
       <p> </p>

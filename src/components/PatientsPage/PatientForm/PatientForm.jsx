@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
-import { Form } from "react-bootstrap";
+import { Alert, Form } from "react-bootstrap";
 import { propTypes } from "react-bootstrap/esm/Image";
 import { useForm } from "react-hook-form";
 import { authenticationService } from "../../../services/authentication/authenticationService";
@@ -9,11 +9,15 @@ import getEmptyRooms from "../../../services/room/getEmptyRooms";
 const PatientForm = (props) => {
   const { register, handleSubmit } = useForm();
   const [infoMsg, setInfoMsg] = useState("");
+  const [registerSuccessful, setRegisterSuccessful] = useState(false);
+  const [errorResponse, setErrorResponse] = useState(null);
   const [emptyRooms, setEmptyRooms] = useState([]);
   const [waitingRoomSwitchCheked, setWaitingRoomSwitchChecked] =
     useState(false);
 
   const onSubmit = (data) => {
+    setRegisterSuccessful(false);
+    setErrorResponse(null);
     console.log(JSON.stringify(data, null, 2));
     let patient = { ...data, registerDate: new Date(), discharged: false };
     if (
@@ -30,8 +34,14 @@ const PatientForm = (props) => {
       },
       body: JSON.stringify(patient),
     }).then((response) => {
-      if (!response.ok) setInfoMsg("error");
-      if (response.ok) setInfoMsg("Paciente registrado");
+      if (!response.ok) {
+        setInfoMsg("error");
+        response.json().then((error) => setErrorResponse(error));
+      }
+      if (response.ok) {
+        setInfoMsg("Paciente registrado");
+        setRegisterSuccessful(true);
+      }
       props.refreshTable();
     });
   };
@@ -206,7 +216,22 @@ const PatientForm = (props) => {
             style={{ marginTop: 20 }}
           />
 
-          <p>{infoMsg}</p>
+          {errorResponse !== null ? (
+            <Alert variant="danger" style={{ marginTop: "8px" }}>
+              {errorResponse.message !== undefined
+                ? errorResponse.message
+                : "Error"}
+            </Alert>
+          ) : (
+            <></>
+          )}
+          {registerSuccessful ? (
+            <Alert variant="success" style={{ marginTop: "8px" }}>
+              Paciente registrado
+            </Alert>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </Form>
