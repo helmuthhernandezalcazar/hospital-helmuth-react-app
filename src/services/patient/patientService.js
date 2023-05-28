@@ -14,6 +14,7 @@ function discharge(patientId) {
     },
     body: JSON.stringify({
       dischargeDate: new Date(),
+      discharged: true,
       room: null,
     }),
   });
