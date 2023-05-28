@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   ButtonGroup,
+  Col,
   Container,
+  Form,
+  FormControl,
   Pagination,
+  Row,
   Table,
   ToggleButton,
   ToggleButtonGroup,
@@ -16,7 +20,6 @@ const PatientTable = (props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
-  const [filter, setFilter] = useState("hospitalized");
   const [url, setUrl] = useState(
     "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection"
   );
@@ -56,80 +59,93 @@ const PatientTable = (props) => {
       });
   }, [props.refreshToggle, url]);
 
-  function filterPatient(patient) {
-    switch (filter) {
-      case "all":
-        return true;
-      case "hospitalized":
-        return (
-          patient.dischargeDate === null &&
-          patient.roomName !== "Sala de espera"
-        );
-      case "discharged":
-        return patient.dischargeDate !== null;
-      case "waiting room":
-        return patient.roomName === "Sala de espera";
-      default:
-        return true;
-    }
-  }
   return (
-    <div>
-      <ToggleButtonGroup
-        type="radio"
-        name="filter-buttons"
-        defaultValue={"hospitalized"}
-        style={{ paddingBottom: "12px" }}
-      >
-        <ToggleButton
-          id="toggleHospitalized"
-          value={"hospitalized"}
-          variant="secondary"
-          onClick={() =>
-            setUrl(
-              "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection"
-            )
-          }
-        >
-          Hospitalizados
-        </ToggleButton>
-        <ToggleButton
-          id="toggleDischarged"
-          value={"discharged"}
-          variant="secondary"
-          onClick={() =>
-            setUrl(
-              "http://localhost:8080/patients/search/findByDischargeDateNotNull?projection=patientProjection"
-            )
-          }
-        >
-          Dados de alta
-        </ToggleButton>
-        <ToggleButton
-          id="toggleWaitingRoom"
-          value={"waiting room"}
-          variant="secondary"
-          onClick={() =>
-            setUrl(
-              "http://localhost:8080/patients/search/findByRoomNullAndDischargeDateNull?projection=patientProjection"
-            )
-          }
-        >
-          Sala de espera
-        </ToggleButton>
-        <ToggleButton
-          id="toggleAll"
-          value={"all"}
-          variant="secondary"
-          onClick={() =>
-            setUrl(
-              "http://localhost:8080/patients?projection=patientProjection"
-            )
-          }
-        >
-          Todos
-        </ToggleButton>
-      </ToggleButtonGroup>
+    <Container>
+      <Row>
+        <Col sm={8}>
+          <ToggleButtonGroup
+            type="radio"
+            name="filter-buttons"
+            defaultValue={"hospitalized"}
+            style={{
+              paddingBottom: "12px",
+              display: "flex",
+            }}
+          >
+            <ToggleButton
+              id="toggleHospitalized"
+              value={"hospitalized"}
+              variant="secondary"
+              onClick={() =>
+                setUrl(
+                  "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection"
+                )
+              }
+            >
+              Hospitalizados
+            </ToggleButton>
+            <ToggleButton
+              id="toggleDischarged"
+              value={"discharged"}
+              variant="secondary"
+              onClick={() =>
+                setUrl(
+                  "http://localhost:8080/patients/search/findByDischargeDateNotNull?projection=patientProjection"
+                )
+              }
+            >
+              Dados de alta
+            </ToggleButton>
+            <ToggleButton
+              id="toggleWaitingRoom"
+              value={"waiting room"}
+              variant="secondary"
+              onClick={() =>
+                setUrl(
+                  "http://localhost:8080/patients/search/findByRoomNullAndDischargeDateNull?projection=patientProjection"
+                )
+              }
+            >
+              Sala de espera
+            </ToggleButton>
+            <ToggleButton
+              id="toggleAll"
+              value={"all"}
+              variant="secondary"
+              onClick={() =>
+                setUrl(
+                  "http://localhost:8080/patients?projection=patientProjection"
+                )
+              }
+            >
+              Todos
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Col>
+        <Col>
+          <Form
+            inline
+            style={{
+              display: "flex",
+              justifyContent: "right",
+              marginLeft: "8px",
+            }}
+          >
+            <FormControl
+              type="text"
+              placeholder="Buscar..."
+              className="mr-sm-2"
+            />
+            <Button
+              type="submit"
+              variant="outline-primary"
+              style={{ marginLeft: "8px" }}
+            >
+              Buscar
+            </Button>
+          </Form>
+        </Col>
+      </Row>
 
       <Table striped bordered hover>
         <thead>
@@ -182,7 +198,7 @@ const PatientTable = (props) => {
           disabled={nextPageDisabled}
         ></Pagination.Next>
       </Pagination>
-    </div>
+    </Container>
   );
 };
 
