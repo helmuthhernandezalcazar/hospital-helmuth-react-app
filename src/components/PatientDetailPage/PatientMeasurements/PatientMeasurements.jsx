@@ -127,7 +127,7 @@ const AddMeasurementForm = (props) => {
   const patientId = props.patientId;
   const [measurementTypes, setMeasurementTypes] = useState([]);
   const [measurementTypeSelected, setMeasurementTypeSelected] = useState({});
-  const [response, setResponse] = useState({});
+  const [response, setResponse] = useState(null);
   const { register, handleSubmit } = useForm();
 
   useEffect(() => {
@@ -166,9 +166,12 @@ const AddMeasurementForm = (props) => {
       },
       body: JSON.stringify(body),
     }).then((response) => {
-      setResponse(response);
+      if (!response.ok) {
+        response.json().then((responseError) => setResponse(responseError));
+      } else {
+        setResponse(null);
+      }
       props.refreshTable();
-      console.log(response);
     });
 
     //window.location.reload(false);
@@ -246,14 +249,16 @@ const AddMeasurementForm = (props) => {
             style={{ marginTop: 20 }}
           />
         </Col>
-      </Row>
-      <Row>
-        {response.status === 400 ? (
-          <Alert variant="danger">Error</Alert>
+        {response !== null ? (
+          <Alert variant="danger" style={{ marginTop: "8px" }}>
+            {response.message}
+          </Alert>
         ) : (
           <></>
         )}
       </Row>
+      <Row></Row>
+      <p> </p>
     </form>
   );
 };
