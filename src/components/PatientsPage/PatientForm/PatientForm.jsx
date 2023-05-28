@@ -15,7 +15,7 @@ const PatientForm = (props) => {
 
   const onSubmit = (data) => {
     console.log(JSON.stringify(data, null, 2));
-    let patient = { ...data, hospitalizationDate: new Date() };
+    let patient = { ...data, registerDate: new Date(), discharged: false };
     if (
       patient.room === "default" ||
       waitingRoomSwitchCheked ||

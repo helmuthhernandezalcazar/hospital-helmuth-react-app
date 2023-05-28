@@ -297,7 +297,7 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
     <Container>
       <Form
         style={{ marginTop: "16px" }}
-        className="form-group shadow p-3 mb-5 bg-body rounded"
+        className="form-group mb-2"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="row">
