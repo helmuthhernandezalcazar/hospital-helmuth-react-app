@@ -32,10 +32,12 @@ const RoomList = () => {
   return (
     <>
       <Container>
-        <h1>
-          {medicalFloor.name} {medicalSpecialty.name}
+        <h1 style={{ marginTop: "16px", textAlign: "left" }}>
+          {medicalSpecialty.name}
         </h1>
-        <Row className="row-cols-4">
+        <h4 style={{ marginTop: "16px" }}>Planta {medicalFloor.name}</h4>
+        <p style={{ fontSize: "22px" }}>{medicalSpecialty.description}</p>
+        <Row className="row-cols-3">
           {rooms.map((room, index) => {
             const self = room._links.self.href;
             const roomId = self.split("http://localhost:8080/rooms/").pop();

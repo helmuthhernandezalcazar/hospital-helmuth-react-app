@@ -1,8 +1,9 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import getPatient from "../../services/room/getPatient";
+import bed from "./bedIcon.png";
 
 const RoomCard = (props) => {
   const id = props.roomId;
@@ -26,10 +27,17 @@ const RoomCard = (props) => {
 
   return (
     <Card style={{ marginTop: "16px" }}>
-      <Card.Header as="h3">Habitación: {room.name} </Card.Header>
+      <Card.Header as="h3">Habitación {room.name}</Card.Header>
       <Card.Body>
         <Card.Title>
-          Paciente: {roomPatient.firstName} {roomPatient.lastName}
+          <Row>
+            <Col xs={4}>
+              <img src={bed} width={100}></img>
+            </Col>
+            <Col style={{ display: "flex", alignItems: "center" }}>
+              {roomPatient.firstName} {roomPatient.lastName}
+            </Col>
+          </Row>
         </Card.Title>
       </Card.Body>
       <Button variant="primary" href={`/paciente/${roomPatientId}`}>
