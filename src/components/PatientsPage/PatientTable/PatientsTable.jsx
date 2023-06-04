@@ -26,6 +26,8 @@ const PatientTable = (props) => {
   const [links, setLinks] = useState({});
   const [nextPageDisabled, setNextPageDisabled] = useState(false);
   const [prevPageDisabled, setPrevPageDisabled] = useState(true);
+  const [filterText, setFilterText] = useState("");
+
   useEffect(() => {
     fetch(url, {
       method: "GET",
@@ -76,11 +78,11 @@ const PatientTable = (props) => {
               id="toggleHospitalized"
               value={"hospitalized"}
               variant="secondary"
-              onClick={() =>
+              onClick={() => {
                 setUrl(
                   "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection"
-                )
-              }
+                );
+              }}
             >
               Hospitalizados
             </ToggleButton>
@@ -88,11 +90,11 @@ const PatientTable = (props) => {
               id="toggleDischarged"
               value={"discharged"}
               variant="secondary"
-              onClick={() =>
+              onClick={() => {
                 setUrl(
                   "http://localhost:8080/patients/search/findByDischargeDateNotNull?projection=patientProjection"
-                )
-              }
+                );
+              }}
             >
               Dados de alta
             </ToggleButton>
@@ -100,11 +102,11 @@ const PatientTable = (props) => {
               id="toggleWaitingRoom"
               value={"waiting room"}
               variant="secondary"
-              onClick={() =>
+              onClick={() => {
                 setUrl(
                   "http://localhost:8080/patients/search/findByRoomNullAndDischargeDateNull?projection=patientProjection"
-                )
-              }
+                );
+              }}
             >
               Sala de espera
             </ToggleButton>
@@ -112,18 +114,18 @@ const PatientTable = (props) => {
               id="toggleAll"
               value={"all"}
               variant="secondary"
-              onClick={() =>
+              onClick={() => {
                 setUrl(
                   "http://localhost:8080/patients?projection=patientProjection"
-                )
-              }
+                );
+              }}
             >
               Todos
             </ToggleButton>
           </ToggleButtonGroup>
         </Col>
         <Col>
-          <Form
+          <Container
             inline
             style={{
               display: "flex",
@@ -135,15 +137,25 @@ const PatientTable = (props) => {
               type="text"
               placeholder="Buscar..."
               className="mr-sm-2"
+              onChange={(event) => {
+                console.log(event.target.value);
+                setFilterText(event.target.value);
+              }}
             />
             <Button
-              type="submit"
+              type="button"
               variant="outline-primary"
               style={{ marginLeft: "8px" }}
+              onClick={() => {
+                document.getElementById("toggleAll").click();
+                setUrl(
+                  `http://localhost:8080/patients/search/findByFirstNameContainsIgnoreCaseOrLastNameContainsIgnoreCaseOrDniContainsIgnoreCase?firstName=${filterText}&lastName=${filterText}&dni=${filterText}&projection=patientProjection`
+                );
+              }}
             >
               Buscar
             </Button>
-          </Form>
+          </Container>
         </Col>
       </Row>
 
