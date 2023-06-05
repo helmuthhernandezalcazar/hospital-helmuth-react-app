@@ -83,7 +83,7 @@ const PatientMeasurements = (props) => {
                   <span>{measurement.measurementType}</span>
                 </td>
                 <td>
-                  {measurement.employeeEmail.split("@helmuthhospital.com")[0]}
+                  {measurement.employeeEmail.split("@hospitalalcazar.com")[0]}
                 </td>
                 <td>
                   <span>
@@ -118,6 +118,7 @@ const PatientMeasurements = (props) => {
         patientId={props.patientId}
         setMeasurementTypeSelected={setMeasurementTypeSelected}
         refreshTable={refreshTable}
+        discharged={props.discharged}
       />
     </Container>
   );
@@ -249,6 +250,7 @@ const AddMeasurementForm = (props) => {
             type="submit"
             className="btn btn-primary"
             value="Añadir"
+            disabled={props.discharged}
             style={{ marginTop: 20 }}
           />
           {errorResponse !== null ? (

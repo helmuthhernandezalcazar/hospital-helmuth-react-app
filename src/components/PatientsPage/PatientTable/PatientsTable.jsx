@@ -21,7 +21,7 @@ const PatientTable = (props) => {
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [url, setUrl] = useState(
-    "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection"
+    "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection&sort=registerDate,desc"
   );
   const [links, setLinks] = useState({});
   const [nextPageDisabled, setNextPageDisabled] = useState(false);
@@ -61,6 +61,10 @@ const PatientTable = (props) => {
       });
   }, [props.refreshToggle, url]);
 
+  useEffect(() => {
+    setFilterText("");
+  }, []);
+
   return (
     <Container>
       <Row>
@@ -80,7 +84,7 @@ const PatientTable = (props) => {
               variant="secondary"
               onClick={() => {
                 setUrl(
-                  "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection"
+                  "http://localhost:8080/patients/search/findByRoomNotNull?projection=patientProjection&sort=registerDate,desc"
                 );
               }}
             >
@@ -92,7 +96,7 @@ const PatientTable = (props) => {
               variant="secondary"
               onClick={() => {
                 setUrl(
-                  "http://localhost:8080/patients/search/findByDischargeDateNotNull?projection=patientProjection"
+                  "http://localhost:8080/patients/search/findByDischargeDateNotNull?projection=patientProjection&sort=registerDate,desc"
                 );
               }}
             >
@@ -104,7 +108,7 @@ const PatientTable = (props) => {
               variant="secondary"
               onClick={() => {
                 setUrl(
-                  "http://localhost:8080/patients/search/findByRoomNullAndDischargeDateNull?projection=patientProjection"
+                  "http://localhost:8080/patients/search/findByRoomNullAndDischargeDateNull?projection=patientProjection&sort=registerDate,desc"
                 );
               }}
             >
@@ -116,7 +120,7 @@ const PatientTable = (props) => {
               variant="secondary"
               onClick={() => {
                 setUrl(
-                  "http://localhost:8080/patients?projection=patientProjection"
+                  "http://localhost:8080/patients?projection=patientProjection&sort=registerDate,desc"
                 );
               }}
             >
@@ -149,7 +153,7 @@ const PatientTable = (props) => {
               onClick={() => {
                 document.getElementById("toggleAll").click();
                 setUrl(
-                  `http://localhost:8080/patients/search/findByFirstNameContainsIgnoreCaseOrLastNameContainsIgnoreCaseOrDniContainsIgnoreCase?firstName=${filterText}&lastName=${filterText}&dni=${filterText}&projection=patientProjection`
+                  `http://localhost:8080/patients/search/findByFirstNameContainsIgnoreCaseOrLastNameContainsIgnoreCaseOrDniContainsIgnoreCase?firstName=${filterText}&lastName=${filterText}&dni=${filterText}&projection=patientProjection&sort=registerDate,desc`
                 );
               }}
             >
@@ -166,7 +170,7 @@ const PatientTable = (props) => {
             <th>Apellidos</th>
             <th>DNI</th>
             <th>Habitación</th>
-            <th>Triaje</th>
+            <th>Fecha registro</th>
             <th>Más info.</th>
           </tr>
         </thead>
@@ -180,7 +184,9 @@ const PatientTable = (props) => {
                 <td>{patient.lastName}</td>
                 <td>{patient.dni}</td>
                 <td>{patient.roomName}</td>
-                <td>{patient.triageLevel}</td>
+                <td>
+                  {new Date(patient.registerDate).toLocaleString("es-ES")}
+                </td>
                 <td>
                   <Button variant="outline-primary" href={`/paciente/${id}`}>
                     Detalles

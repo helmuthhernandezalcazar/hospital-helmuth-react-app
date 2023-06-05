@@ -10,13 +10,11 @@ import {
 } from "react-bootstrap";
 import nurseAndPatientImg from "./nurseandpatient.png";
 import doctorsImg from "./doctors.png";
-import UserInfo from "../UserContext/UserInfo";
 import { authenticationService } from "../../services/authentication/authenticationService";
 
 const MainPage = ({ userLogged }) => {
   const [showA, setShowA] = useState(true);
   const toggleShowA = () => {
-    console.log(UserInfo);
     setShowA(!showA);
   };
   useEffect(() => {
@@ -88,6 +86,21 @@ const MainPage = ({ userLogged }) => {
             </p>
           </Col>
         </Row>
+
+        <Col>
+          <h2
+            className="fw-bold"
+            style={{ fontFamily: "candara", marginTop: "18px" }}
+          >
+            Nuestras especialidades médicas
+          </h2>
+          <ul className="lead mb-4">
+            <li>Cardiología</li>
+            <li>Neumología</li>
+            <li>Urología</li>
+            <li>Neurología</li>
+          </ul>
+        </Col>
       </Container>
       <Container
         fluid
@@ -108,10 +121,6 @@ const MainPage = ({ userLogged }) => {
               <h5>Email</h5>
               <p>contacto@hospitalalcazar.es</p>
             </Col>
-            <Col>
-              <h5>Autor</h5>
-              <p>Helmuth Hernández Alcázar</p>
-            </Col>
           </Row>
         </Container>
       </Container>
@@ -127,7 +136,7 @@ const MainPage = ({ userLogged }) => {
                 {
                   authenticationService
                     .getUsernameFromToken()
-                    .split("@helmuthhospital.com")[0]
+                    .split("@hospitalalcazar.com")[0]
                 }
                 !
               </strong>

@@ -47,7 +47,8 @@ const PatientDetailCard = (props) => {
       .then((data) => {
         setPatient(data);
         setPatientDischarged(data.dischargeDate !== null);
-        console.log(data.dischargeDate);
+        props.setDischarged(data.discharged);
+        console.log(data);
       });
   }, [refreshToggle]);
 
@@ -103,9 +104,7 @@ const PatientDetailCard = (props) => {
                     </ListGroupItem>
                     <ListGroupItem>
                       Fecha registro:{" "}
-                      {new Date(patient.hospitalizationDate).toLocaleString(
-                        "es-ES"
-                      )}
+                      {new Date(patient.registerDate).toLocaleString("es-ES")}
                     </ListGroupItem>
                     <ListGroupItem>Síntomas: {patient.symptoms}</ListGroupItem>
                   </ListGroup>
@@ -117,16 +116,13 @@ const PatientDetailCard = (props) => {
                       {patient.dischargeDate === null ? patientRoom.name : ""}
                     </ListGroupItem>
                     <ListGroupItem>
-                      Planta: {patient.roomMedicalSpecialty}
+                      Planta: {patient.roomMedicalFloor}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      Especialidad: {patient.roomMedicalSpecialty}
                     </ListGroupItem>
                     <ListGroupItem>
                       Diagnóstico: {patient.medicalDiagnosis}
-                    </ListGroupItem>
-                    <ListGroupItem>
-                      Fecha hospitalización:{" "}
-                      {new Date(patient.hospitalizationDate).toLocaleString(
-                        "es-ES"
-                      )}
                     </ListGroupItem>
 
                     <ListGroupItem>

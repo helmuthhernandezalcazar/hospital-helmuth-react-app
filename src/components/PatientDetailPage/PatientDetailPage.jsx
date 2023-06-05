@@ -8,17 +8,25 @@ import PatientNotes from "./PatientNotes";
 
 const PatientDetailPage = () => {
   const { id } = useParams([]);
+  const [discharged, setDischarged] = useState(false);
 
+  function handleDischargeState(discharge) {
+    setDischarged(discharge);
+    console.log(discharge);
+  }
   return (
     <Tabs className="mb-3">
       <Tab eventKey="Detalles del paciente" title="Detalles del paciente">
-        <PatientDetailCard patientId={id} />
+        <PatientDetailCard
+          patientId={id}
+          setDischarged={(discharge) => handleDischargeState(discharge)}
+        />
       </Tab>
       <Tab eventKey="Notas del paciente" title="Notas del paciente">
-        <PatientNotes patientId={id} />
+        <PatientNotes patientId={id} discharged={discharged} />
       </Tab>
       <Tab eventKey="Mediciones del paciente" title="Mediciones del paciente">
-        <PatientMeasurements patientId={id} />
+        <PatientMeasurements patientId={id} discharged={discharged} />
       </Tab>
     </Tabs>
   );

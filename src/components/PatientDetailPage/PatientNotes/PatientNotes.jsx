@@ -91,7 +91,7 @@ const PatientNotes = (props) => {
                     {note.note}
                   </span>
                 </td>
-                <td>{note.employeeEmail.split("@helmuthhospital.com")[0]}</td>
+                <td>{note.employeeEmail.split("@hospitalalcazar.com")[0]}</td>
                 <td className="col-md-4">
                   {new Date(note.date).toLocaleString("es-ES")}
                 </td>
@@ -123,6 +123,7 @@ const PatientNotes = (props) => {
         style={{ marginTop: "16px" }}
         patientId={props.patientId}
         refreshTable={refreshTable}
+        discharged={props.discharged}
       />
     </Container>
   );
@@ -175,7 +176,12 @@ const AddNoteSection = (props) => {
       </Form.Group>
 
       <Form.Group style={{ marginTop: "8px" }}>
-        <Button className="float-right" type="submit" variant="primary">
+        <Button
+          className="float-right"
+          type="submit"
+          variant="primary"
+          disabled={props.discharged}
+        >
           Añadir
         </Button>
       </Form.Group>

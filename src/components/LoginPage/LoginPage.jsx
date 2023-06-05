@@ -1,13 +1,12 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Alert, Button, Container, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { redirect, useNavigate } from "react-router-dom";
 import { authenticationService } from "../../services/authentication/authenticationService";
 import getEmptyRooms from "../../services/room/getEmptyRooms";
 import hospitalicon from "./hospital.png";
-import UserInfo from "../UserContext/UserInfo";
 
 const LoginPage = (props) => {
   const { register, handleSubmit } = useForm();
@@ -77,8 +76,14 @@ const LoginPage = (props) => {
         >
           Iniciar sesión ✓
         </Button>
+        {infoMsg === "error" ? (
+          <Alert variant="danger" style={{ marginTop: "8px" }}>
+            Error de credenciales
+          </Alert>
+        ) : (
+          <></>
+        )}
       </Form>
-      <p>{infoMsg}</p>
     </Container>
   );
 };
