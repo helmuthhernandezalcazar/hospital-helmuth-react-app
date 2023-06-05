@@ -40,7 +40,11 @@ const RoomCard = (props) => {
           </Row>
         </Card.Title>
       </Card.Body>
-      <Button variant="primary" href={`/paciente/${roomPatientId}`}>
+      <Button
+        variant="primary"
+        href={`/paciente/${roomPatientId}`}
+        disabled={roomPatient.firstName === undefined}
+      >
         Ver paciente
       </Button>
     </Card>
