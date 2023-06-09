@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Badge,
   Button,
   Card,
@@ -102,11 +103,11 @@ const PatientDetailCard = (props) => {
                     <ListGroupItem>
                       Teléfono: {patient.phoneNumber}
                     </ListGroupItem>
+                    <ListGroupItem>Síntomas: {patient.symptoms}</ListGroupItem>
                     <ListGroupItem>
                       Fecha registro:{" "}
                       {new Date(patient.registerDate).toLocaleString("es-ES")}
                     </ListGroupItem>
-                    <ListGroupItem>Síntomas: {patient.symptoms}</ListGroupItem>
                   </ListGroup>
                 </Col>
                 <Col>
@@ -189,8 +190,7 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
   const { register, handleSubmit, reset } = useForm();
   const [infoMsg, setInfoMsg] = useState("");
   const [emptyRooms, setEmptyRooms] = useState([]);
-  const [waitingRoomSwitchCheked, setWaitingRoomSwitchChecked] =
-    useState(false);
+  const [errorResponse, setErrorResponse] = useState(null);
 
   useEffect(() => {
     console.log("useEffectr");
@@ -213,7 +213,10 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
       },
       body: JSON.stringify(patient),
     }).then((response) => {
-      if (!response.ok) setInfoMsg("error");
+      if (!response.ok) {
+        setInfoMsg("error");
+        response.json().then((error) => setErrorResponse(error));
+      }
       if (response.ok) {
         setInfoMsg("Paciente registrado");
         updateData();
@@ -417,9 +420,17 @@ const ModifyPatient = ({ actualPatient, showModifyForm, updateData }) => {
             >
               Guardar cambios
             </Button>
-            <p>{infoMsg}</p>
           </div>
         </div>
+        {errorResponse !== null ? (
+          <Alert variant="danger" style={{ marginTop: "8px" }}>
+            {errorResponse.message !== undefined
+              ? errorResponse.message
+              : "Error"}
+          </Alert>
+        ) : (
+          <></>
+        )}
       </Form>
     </Container>
   );
