@@ -218,6 +218,7 @@ const AddMeasurementForm = (props) => {
             <input
               type="text"
               className="form-control"
+              disabled={props.discharged}
               {...register("measurementValue")}
             ></input>
           </label>
@@ -226,6 +227,7 @@ const AddMeasurementForm = (props) => {
           <label>
             Tipo
             <select
+              disabled={props.discharged}
               onChangeCapture={(e) => {
                 props.setMeasurementTypeSelected(e.target.value);
                 console.log(e.target.value.split("http://localhost:8080"));

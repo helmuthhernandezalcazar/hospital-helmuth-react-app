@@ -169,6 +169,7 @@ const AddNoteSection = (props) => {
     >
       <Form.Group>
         <Form.Control
+          disabled={props.discharged}
           as="textarea"
           cols={130}
           {...register("note")}

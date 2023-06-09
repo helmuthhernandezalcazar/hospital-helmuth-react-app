@@ -61,10 +61,6 @@ const PatientTable = (props) => {
       });
   }, [props.refreshToggle, url]);
 
-  useEffect(() => {
-    setFilterText("");
-  }, []);
-
   return (
     <Container>
       <Row>
