@@ -9,7 +9,7 @@ import RoomCard from "../RoomCard";
 import getMedicalSpecialty from "../../services/medicalFloor/getMedicalSpecialty";
 import { authenticationService } from "../../services/authentication/authenticationService";
 
-const RoomList = () => {
+const MedicalFloorPage = () => {
   const { id } = useParams([]);
   const [rooms, setRooms] = useState([]);
   const [medicalFloor, setMedicalFloor] = useState({});
@@ -53,4 +53,4 @@ const RoomList = () => {
   );
 };
 
-export default RoomList;
+export default MedicalFloorPage;

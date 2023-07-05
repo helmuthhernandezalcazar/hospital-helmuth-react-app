@@ -10,7 +10,7 @@ import MainPage from "../components/MainPage";
 import NavBar from "../components/NavBar";
 import PatientDetailPage from "../components/PatientDetailPage";
 import PatientsPage from "../components/PatientsPage";
-import RoomList from "../components/RoomList/RoomList";
+import MedicalFloorPage from "../components/MedicalFloorPage/RoomList";
 import LoginPage from "../components/LoginPage";
 import { authenticationService } from "../services/authentication/authenticationService";
 import { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ function Router() {
             loggedUser ? (
               <>
                 <NavBar />
-                <RoomList />
+                <MedicalFloorPage />
               </>
             ) : (
               <Navigate to="/login" />
