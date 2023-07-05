@@ -35,7 +35,9 @@ const RoomCard = (props) => {
               <img src={bed} width={100}></img>
             </Col>
             <Col style={{ display: "flex", alignItems: "center" }}>
-              {roomPatient.firstName} {roomPatient.lastName}
+              <b>
+                {roomPatient.firstName} {roomPatient.lastName}
+              </b>
             </Col>
           </Row>
         </Card.Title>

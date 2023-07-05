@@ -52,10 +52,10 @@ const LoginPage = (props) => {
         </h2>
 
         <Form.Group style={{ marginTop: "16px" }}>
-          <Form.Label style={{ fontFamily: "Sans-serif" }}>Usuario</Form.Label>
+          <Form.Label style={{ fontFamily: "Sans-serif" }}>Email</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Inserte su usuario"
+            placeholder="Inserte su email corporativo"
             {...register("user")}
           />
         </Form.Group>

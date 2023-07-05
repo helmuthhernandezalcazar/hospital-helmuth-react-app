@@ -33,7 +33,7 @@ const MedicalFloorPage = () => {
     <>
       <Container>
         <h1 style={{ marginTop: "16px", textAlign: "left" }}>
-          {medicalSpecialty.name}
+          <b>{medicalSpecialty.name}</b>
         </h1>
         <h4 style={{ marginTop: "16px" }}>Planta {medicalFloor.name}</h4>
         <p style={{ fontSize: "22px" }}>{medicalSpecialty.description}</p>
