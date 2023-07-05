@@ -7,7 +7,6 @@ import {
   Routes,
 } from "react-router-dom";
 import MainPage from "../components/MainPage";
-import MedicalFLoorList from "../components/MedicalFloorList";
 import NavBar from "../components/NavBar";
 import PatientDetailPage from "../components/PatientDetailPage";
 import PatientsPage from "../components/PatientsPage";
@@ -31,19 +30,6 @@ function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/plantas"
-          element={
-            loggedUser ? (
-              <>
-                <NavBar />
-                <MedicalFLoorList />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
         <Route
           path="/plantas/:id/habitaciones"
           element={
